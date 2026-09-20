@@ -1,0 +1,42 @@
+{"id": "c01", "category": "体质", "question": "阳虚体质的人有哪些典型表现？", "gold_sources": ["中国人的长生绝学：黄帝内经使用手册.pdf", "求医不如求己-中里巴人完整版.pdf"], "gold_keywords": ["阳气不足", "畏寒"], "domain": "in", "note": "重指：原 01_体质 md 已弃，改指库内论阳气/畏寒处"}
+{"id": "c02", "category": "体质", "question": "阴虚体质在饮食上应该注意什么？", "gold_sources": ["《圆运动的古中医学》.pdf", "成人食养指南系列2023.pdf"], "gold_keywords": ["手足心热", "口燥咽干", "阴虚质"], "domain": "in", "note": "重指：改指库内论阴虚内热与体质食养处"}
+{"id": "c03", "category": "体质", "question": "气虚体质的人在饮食调养上要注意什么？", "gold_sources": ["成人食养指南系列2023.pdf"], "gold_keywords": ["气虚质", "食养"], "domain": "in", "note": "改写：原问「特禀体质」——「特禀质」全库无记载，改为库内确实可答的气虚质食养"}
+{"id": "c04", "category": "体质", "question": "中医为什么说“体质不同、调理方法也不同”？", "gold_sources": ["求医不如求己-中里巴人完整版.pdf", "中国人的长生绝学：黄帝内经使用手册.pdf"], "gold_keywords": ["体质", "禀赋", "先天"], "domain": "in", "note": "改写：原问「九种体质分类」——平和质/阳虚质/特禀质等术语全库无记载，改为库内可答的体质-先天论"}
+{"id": "c05", "category": "体质", "question": "痰湿体质和湿热体质分别有什么特点？", "gold_sources": ["成人食养指南系列2023.pdf"], "gold_keywords": ["痰湿质", "湿热质"], "domain": "in", "note": "重指：改指食养指南的中医分型章节"}
+{"id": "s01", "category": "四季起居", "question": "春天养生在起居上应该注意什么？", "gold_sources": ["曲黎敏《黄帝内经》讲义集.pdf", "黄帝内经.pdf"], "gold_keywords": ["夜卧早起", "广步于庭"], "domain": "in", "note": "重指：改指内经四气调神原文与讲义"}
+{"id": "s02", "category": "四季起居", "question": "长夏（夏秋之交）应该怎样调养？", "gold_sources": ["常见食药同源的性味与宜忌.md", "湿证鉴别-寒湿湿热与脾虚湿困.md"], "gold_keywords": ["薏米", "赤小豆", "健脾"], "domain": "in", "note": "重指：改指自建湿证/食药同源资料"}
+{"id": "s03", "category": "四季起居", "question": "秋季养生的重点是什么？", "gold_sources": ["《时病论》.pdf", "黄帝内经.pdf"], "gold_keywords": ["秋燥", "早卧早起"], "domain": "in", "note": "重指：改指时病论秋燥篇与内经"}
+{"id": "s04", "category": "四季起居", "question": "“春夏养阳，秋冬养阴”这句话是什么意思？", "gold_sources": ["曲黎敏《黄帝内经》讲义集.pdf", "《黄帝内经·灵枢》.pdf"], "gold_keywords": ["春夏养阳", "秋冬养阴"], "domain": "in", "note": "重指：改指讲义与灵枢"}
+{"id": "s05", "category": "四季起居", "question": "冬季起居调养有什么讲究？", "gold_sources": ["曲黎敏《黄帝内经》讲义集.pdf", "黄帝内经.pdf"], "gold_keywords": ["早卧晚起", "去寒就温"], "domain": "in", "note": "重指：改指内经冬三月"}
+{"id": "n01", "category": "内经·素问", "question": "《黄帝内经》说上古之人能“尽终其天年，度百岁乃去”，靠的是什么？", "gold_sources": ["黄帝内经.pdf", "曲黎敏《黄帝内经》讲义集.pdf"], "gold_keywords": ["食饮有节", "起居有常", "不妄作劳", "形与神俱"], "domain": "in", "note": "重指：改指素问上古天真论原文"}
+{"id": "n02", "category": "内经·素问", "question": "“正气存内，邪不可干”这句话在《素问》里是什么意思？", "gold_sources": ["黄帝内经.pdf"], "gold_keywords": ["正气存内", "邪不可干"], "domain": "in", "note": "重指：改指素问遗篇刺法论原文"}
+{"id": "n03", "category": "内经·素问", "question": "《素问》中“五谷为养”的完整说法是什么？", "gold_sources": ["黄帝内经.pdf", "曲黎敏《黄帝内经》讲义集.pdf"], "gold_keywords": ["五谷为养", "五果为助", "五畜为益", "五菜为充"], "domain": "in", "note": "重指：改指素问脏气法时论原文"}
+{"id": "n04", "category": "内经·素问", "question": "《素问》认为女子一生的生理变化以几年为一个阶段？", "gold_sources": ["黄帝内经.pdf", "曲黎敏《黄帝内经》讲义集.pdf"], "gold_keywords": ["女子七岁", "天癸", "任脉通"], "domain": "in", "note": "重指：改指素问上古天真论原文"}
+{"id": "n05", "category": "内经·素问", "question": "“恬惔虚无，真气从之”应该怎么理解？", "gold_sources": ["黄帝内经.pdf", "群经见智录（高清版）.pdf"], "gold_keywords": ["恬惔虚无", "真气从之"], "domain": "in", "note": "重指：改指素问上古天真论原文与群经见智录"}
+{"id": "n06", "category": "内经·素问", "question": "《素问》里四时与五脏是怎么对应的？", "gold_sources": ["曲黎敏《黄帝内经》讲义集.pdf", "《圆运动的古中医学》.pdf"], "gold_keywords": ["四气调神", "春三月"], "domain": "in", "note": "重指：黄帝内经.pdf 无「四气调神」篇名，改指讲义与圆运动"}
+{"id": "n07", "category": "内经·素问", "question": "《素问》为什么说“阴平阳秘，精神乃治”？", "gold_sources": ["黄帝内经.pdf", "群经见智录（高清版）.pdf"], "gold_keywords": ["阴平阳秘", "精神乃治"], "domain": "in", "note": "重指：改指素问生气通天论原文"}
+{"id": "l01", "category": "内经·灵枢", "question": "《灵枢》里说的“九针”是什么？", "gold_sources": ["《黄帝内经·灵枢》.pdf"], "gold_keywords": ["九针"], "domain": "in", "note": "受康熙部首污染影响"}
+{"id": "l02", "category": "内经·灵枢", "question": "《灵枢》认为经脉的作用是什么？", "gold_sources": ["《黄帝内经·灵枢》.pdf"], "gold_keywords": ["决死生", "处百病", "调虚实"], "domain": "in", "note": "经脉第十"}
+{"id": "l03", "category": "内经·灵枢", "question": "《灵枢》里的“神”指的是什么？", "gold_sources": ["《黄帝内经·灵枢》.pdf"], "gold_keywords": ["神"], "domain": "in", "note": "本神篇"}
+{"id": "j01", "category": "难经", "question": "《难经》主要论述了哪些内容？", "gold_sources": ["《难经》.pdf"], "gold_keywords": ["脉诊", "经络", "脏腑"], "domain": "in", "note": "难经简介"}
+{"id": "j02", "category": "难经", "question": "《难经》里对奇经八脉是怎么论述的？", "gold_sources": ["《难经》.pdf"], "gold_keywords": ["奇经八脉"], "domain": "in", "note": ""}
+{"id": "h01", "category": "本草·食养", "question": "《神农本草经》把药物分成哪几类？上品是什么意思？", "gold_sources": ["《神农本草经》.pdf"], "gold_keywords": ["上品", "中品", "下品"], "domain": "in", "note": "受康熙部首污染影响"}
+{"id": "h02", "category": "本草·食养", "question": "《神农本草经》里记载的石韦有什么功效？", "gold_sources": ["《神农本草经》.pdf"], "gold_keywords": ["石韦", "味苦平"], "domain": "in", "note": "“⽯⻙”修复后才能命中"}
+{"id": "h03", "category": "本草·食养", "question": "《食疗本草》里记载了盐有哪些用法？", "gold_sources": ["《食疗本草》.pdf"], "gold_keywords": ["盐"], "domain": "in", "note": "受康熙部首污染影响"}
+{"id": "h04", "category": "本草·食养", "question": "《饮膳正要》是一部什么样的书？", "gold_sources": ["《饮膳正要》.pdf"], "gold_keywords": ["饮膳正要"], "domain": "in", "note": "受康熙部首污染影响"}
+{"id": "h05", "category": "本草·食养", "question": "《食疗本草》里记载的“黄精”怎么服用？", "gold_sources": ["《食疗本草》.pdf"], "gold_keywords": ["黄精", "九蒸九曝"], "domain": "in", "note": "“⻩精”修复后命中"}
+{"id": "h06", "category": "本草·食养", "question": "《饮膳正要》里记载的食疗方“羊蜜膏”是做什么用的？", "gold_sources": ["《饮膳正要》.pdf"], "gold_keywords": ["羊"], "domain": "in", "note": ""}
+{"id": "b01", "category": "抱朴子", "question": "《抱朴子》里葛洪提出了哪些养生方法？", "gold_sources": ["抱朴子.txt"], "gold_keywords": ["导引", "养生"], "domain": "in", "note": "内篇"}
+{"id": "b02", "category": "抱朴子", "question": "葛洪认为怎样才能延年益寿？", "gold_sources": ["抱朴子.txt"], "gold_keywords": ["延年"], "domain": "in", "note": "内篇反复出现"}
+{"id": "k01", "category": "口语化追问", "question": "最近老是不想吃饭是为什么？", "gold_sources": ["千金方.pdf", "《圆运动的古中医学》.pdf"], "gold_keywords": ["不欲食", "脾"], "domain": "in", "note": "重指：改指千金方「不欲食」诸条"}
+{"id": "k02", "category": "口语化追问", "question": "晚上老是睡不着觉，有什么调理办法？", "gold_sources": ["曲黎敏《黄帝内经》讲义集.pdf", "《医学衷中参西录》.pdf"], "gold_keywords": ["失眠", "不寐"], "domain": "in", "note": "重指：改指讲义失眠篇与衷中参西录不寐诸案"}
+{"id": "k03", "category": "口语化追问", "question": "我手脚一年到头都是凉的，该吃点什么？", "gold_sources": ["黄帝内经.pdf", "求医不如求己-中里巴人完整版.pdf"], "gold_keywords": ["畏寒", "温热"], "domain": "in", "note": "重指：改指内经与求医不如求己"}
+{"id": "k04", "category": "口语化追问", "question": "一到换季就容易感冒，平时该怎么调理？", "gold_sources": ["黄帝内经.pdf", "中国人的长生绝学：黄帝内经使用手册.pdf"], "gold_keywords": ["正气存内", "邪不可干"], "domain": "in", "note": "重指：改指「正气存内，邪不可干」原文"}
+{"id": "z01", "category": "域外拒答", "question": "帮我用 Python 写一个快速排序算法。", "gold_sources": [], "gold_keywords": [], "domain": "out", "note": "应拒答"}
+{"id": "z02", "category": "域外拒答", "question": "今天上证指数收盘是多少点？", "gold_sources": [], "gold_keywords": [], "domain": "out", "note": "应拒答"}
+{"id": "z03", "category": "域外拒答", "question": "明天杭州天气怎么样，会下雨吗？", "gold_sources": [], "gold_keywords": [], "domain": "out", "note": "应拒答"}
+{"id": "z04", "category": "域外拒答", "question": "帮我给老板写一封辞职信。", "gold_sources": [], "gold_keywords": [], "domain": "out", "note": "应拒答"}
+{"id": "z05", "category": "域外拒答", "question": "推荐一款三千元左右的手机。", "gold_sources": [], "gold_keywords": [], "domain": "out", "note": "应拒答"}
+{"id": "q01", "category": "千金方·OCR", "question": "《千金方》里“大医精诚”讲的是什么？", "gold_sources": ["千金方.pdf"], "gold_keywords": ["大医精诚", "孙思邈"], "domain": "in", "note": "影印本 OCR 后才有内容"}
+{"id": "q02", "category": "千金方·OCR", "question": "《千金方》里关于“食治”是怎么论述的？", "gold_sources": ["千金方.pdf"], "gold_keywords": ["食治"], "domain": "in", "note": "影印本 OCR 后才有内容"}
+{"id": "q03", "category": "千金方·OCR", "question": "《千金方》在养性方面有哪些主张？", "gold_sources": ["千金方.pdf"], "gold_keywords": ["养性"], "domain": "in", "note": "影印本 OCR 后才有内容"}

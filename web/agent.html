@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>体质辨识问诊 · 中医养生助手</title>
+<style>
+  :root {
+    --bg: #ffffff; --side: #f7f9fc; --ink: #26303c; --sub: #7a8494;
+    --brand: #0f766e; --brand-weak: #effaf8; --line: #e6eaf0;
+    --user-bubble: #effaf8; --hover: #eef2f8; --danger: #e5484d;
+    --accent: #b45309; --accent-weak: #fffbeb;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: var(--bg); color: var(--ink); font-size: 15px;
+    display: flex; overflow: hidden;
+  }
+
+  /* ============ 侧栏 ============ */
+  #sidebar {
+    width: 264px; min-width: 264px; background: var(--side);
+    border-right: 1px solid var(--line); display: flex; flex-direction: column;
+  }
+  .side-head { padding: 18px 16px 10px; display: flex; align-items: center; gap: 8px; }
+  .side-head .logo {
+    width: 30px; height: 30px; border-radius: 8px; background: var(--brand);
+    color: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px;
+  }
+  .side-head b { font-size: 15px; }
+  #btn-new {
+    margin: 6px 14px 10px; padding: 10px; border: none; border-radius: 10px;
+    background: var(--brand); color: #fff; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  #btn-new:hover { filter: brightness(1.08); }
+  #btn-manage { margin: 0 14px 8px; padding: 6px; border: none; border-radius: 8px;
+    background: none; color: var(--sub); font-size: 12.5px; cursor: pointer; }
+  #btn-manage:hover { background: var(--hover); color: var(--ink); }
+  #conv-list { flex: 1; overflow-y: auto; padding: 4px 8px 12px; }
+  .conv-item {
+    display: flex; align-items: center; padding: 9px 10px; border-radius: 9px;
+    cursor: pointer; color: #3a4552; margin-bottom: 2px; position: relative;
+  }
+  .conv-item:hover { background: var(--hover); }
+  .conv-item.active { background: var(--brand-weak); color: var(--brand); font-weight: 600; }
+  .conv-item .pin-ico { margin-right: 5px; font-size: 12px; opacity: .8; }
+  .conv-item .sel-box { margin-right: 8px; flex-shrink: 0; display: none; }
+  body.manage-mode .conv-item .sel-box { display: inline-flex; }
+  body.manage-mode .conv-ops { display: none !important; }
+  .conv-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.8px; }
+  .conv-ops { display: none; gap: 2px; flex-shrink: 0; }
+  .conv-item:hover .conv-ops { display: flex; }
+  .conv-ops button {
+    border: none; background: none; cursor: pointer; font-size: 13px;
+    padding: 2px 5px; border-radius: 6px; color: var(--sub);
+  }
+  .conv-ops button:hover { background: #e2e8f2; color: var(--ink); }
+  .conv-ops button.del:hover { color: var(--danger); }
+  .rename-input {
+    flex: 1; font-size: 13.8px; border: 1.5px solid var(--brand);
+    border-radius: 6px; padding: 2px 6px; outline: none; min-width: 0; background: #fff;
+  }
+  #manage-bar {
+    display: none; padding: 10px 14px; border-top: 1px solid var(--line);
+    background: #fff; gap: 8px;
+  }
+  body.manage-mode #manage-bar { display: flex; }
+  #manage-bar button {
+    flex: 1; padding: 8px 0; border-radius: 8px; font-size: 13px; cursor: pointer;
+    border: 1px solid var(--line); background: #fff; color: var(--sub);
+  }
+  #manage-bar button:disabled { opacity: .45; cursor: not-allowed; }
+  #manage-bar .btn-batch-del { border-color: #f3c4c6; color: var(--danger); }
+  #manage-bar .btn-batch-del:not(:disabled):hover { background: #fdf0f0; }
+  .side-links { padding: 8px 14px; border-top: 1px solid var(--line); }
+  .side-links a {
+    display: block; font-size: 13px; color: var(--brand); text-decoration: none;
+    padding: 6px 0;
+  }
+  .side-links a:hover { text-decoration: underline; }
+  .side-foot {
+    padding: 10px 16px; border-top: 1px solid var(--line);
+    font-size: 12px; color: var(--sub); line-height: 1.5;
+  }
+
+  /* ============ 主区 ============ */
+  #main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+  /* 顶部进度条 */
+  #topbar {
+    border-bottom: 1px solid var(--line); padding: 12px 24px;
+    display: flex; align-items: center; gap: 16px; background: #fff;
+  }
+  #topbar .stage-chip {
+    font-size: 12.5px; padding: 3px 10px; border-radius: 999px;
+    background: var(--brand-weak); color: var(--brand); font-weight: 600; white-space: nowrap;
+  }
+  #topbar .bar-wrap { flex: 1; height: 7px; background: #eef1f5; border-radius: 999px; overflow: hidden; }
+  #topbar .bar { height: 100%; width: 0; background: var(--brand); transition: width .35s; }
+  #topbar .count { font-size: 12.5px; color: var(--sub); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  #mem-badge {
+    font-size: 12px; color: var(--sub); background: #f4f6f9; border-radius: 8px;
+    padding: 3px 9px; white-space: nowrap; cursor: help;
+  }
+
+  #chat-scroll { flex: 1; overflow-y: auto; }
+  #chat-inner {
+    max-width: 820px; margin: 0 auto; padding: 26px 24px 16px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+
+  #welcome { text-align: center; padding: 70px 20px 30px; }
+  #welcome .big-logo {
+    width: 60px; height: 60px; border-radius: 16px; background: var(--brand);
+    color: #fff; font-size: 30px; display: flex; align-items: center;
+    justify-content: center; margin: 0 auto 16px;
+  }
+  #welcome h1 { font-size: 22px; margin-bottom: 8px; }
+  #welcome p { color: var(--sub); font-size: 14px; margin-bottom: 26px; line-height: 1.8; }
+  .sample {
+    display: block; width: 100%; max-width: 460px; margin: 0 auto 10px;
+    border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px;
+    cursor: pointer; font-size: 14px; color: #3a4552; text-align: left; background: #fff;
+  }
+  .sample:hover { border-color: var(--brand); color: var(--brand); }
+  /* 已有体质档案提示（欢迎页） */
+  #profile-hint {
+    display: none; max-width: 460px; margin: 4px auto 0; text-align: left;
+    border: 1px solid #cdece6; border-radius: 10px; background: var(--brand-weak);
+    padding: 10px 14px; font-size: 13px; color: #3a4552; line-height: 1.7;
+  }
+  #profile-hint b { color: var(--brand); }
+  #profile-hint .re { font-size: 12px; color: var(--sub); }
+
+  /* 消息 */
+  .msg-user { display: flex; justify-content: flex-end; align-items: flex-end; gap: 8px; }
+  .msg-user .bubble {
+    background: var(--user-bubble); border-radius: 14px 14px 4px 14px;
+    padding: 10px 16px; max-width: 78%; white-space: pre-wrap; line-height: 1.65;
+  }
+  .msg-ai { display: flex; gap: 12px; }
+  .msg-ai .avatar {
+    width: 32px; height: 32px; border-radius: 9px; background: var(--brand); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 15px;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .msg-ai .body { flex: 1; min-width: 0; line-height: 1.8; }
+  .msg-ai .body p { margin-bottom: 8px; }
+  .msg-ai .body ul, .msg-ai .body ol { margin: 4px 0 10px 22px; }
+  .msg-ai .body li { margin-bottom: 4px; }
+  .msg-ai .body h3 { font-size: 15.5px; margin: 12px 0 6px; }
+
+  /* 消息操作（hover 出现） */
+  .msg-ops { display: flex; gap: 6px; margin-top: 6px; opacity: 0; transition: opacity .15s; }
+  .msg-user:hover .msg-ops, .msg-ai:hover .msg-ops { opacity: 1; }
+  .msg-ops button {
+    border: none; background: var(--hover); color: var(--sub); font-size: 12px;
+    border-radius: 6px; padding: 3px 10px; cursor: pointer;
+  }
+  .msg-ops button:hover { color: var(--brand); background: var(--brand-weak); }
+
+  /* 思考过程（DeepSeek 风格可折叠面板） */
+  details.think {
+    margin-bottom: 10px; border: 1px solid var(--line); border-radius: 10px;
+    background: #fafbfd; overflow: hidden; font-size: 13px;
+  }
+  details.think summary {
+    padding: 7px 12px; cursor: pointer; color: var(--sub); user-select: none;
+    list-style: none; display: flex; align-items: center; gap: 7px;
+  }
+  details.think summary::-webkit-details-marker { display: none; }
+  details.think summary .chev { transition: transform .2s; font-size: 11px; }
+  details.think[open] summary .chev { transform: rotate(90deg); }
+  details.think[open] summary { border-bottom: 1px dashed var(--line); }
+  details.think .think-body { padding: 8px 12px; }
+  .trace {
+    border-left: 2px solid var(--brand-weak); padding: 2px 0 2px 12px;
+    font-size: 12.8px; color: var(--sub); line-height: 1.9;
+  }
+  .trace .ln { display: flex; gap: 7px; align-items: baseline; }
+  .trace .ln .t { flex-shrink: 0; }
+  .trace .hit { color: var(--brand); }
+  .trace .miss { color: var(--accent); }
+  .trace .q { color: #5b6675; font-style: italic; }
+
+  /* 引用来源 */
+  .sources-box { margin-top: 12px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; font-size: 13px; }
+  .sources-box summary { padding: 8px 14px; cursor: pointer; color: var(--sub); background: #fafbfd; }
+  .sources-box .src-list { padding: 6px 14px 10px; }
+  .sources-box .src { padding: 5px 0; border-bottom: 1px dashed var(--line); display: flex; justify-content: space-between; gap: 10px; }
+  .sources-box .src:last-child { border-bottom: none; }
+  .src .score { color: var(--brand); font-size: 12.5px; flex-shrink: 0; }
+
+  /* ============ 安全判读卡（app/safety 规则库命中）============
+     与问答页同一套结构。判读由后端规则库在 LLM 之前算好，不依赖资料库检索。 */
+  .safety-card { margin-bottom: 14px; border-radius: 12px; overflow: hidden; border: 1px solid #f0c9cb; background: #fdf5f5; }
+  .safety-card.medium { border-color: #f0dcb4; background: #fdfaf1; }
+  .safety-card.info { border-color: #d5ddfb; background: #f6f9ff; }
+  .safety-head {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    padding: 10px 14px; font-size: 13.6px; font-weight: 600; color: #b4232a;
+    background: rgba(229,72,77,.07);
+  }
+  .safety-card.medium .safety-head { color: #a15c06; background: rgba(232,163,61,.10); }
+  .safety-card.info .safety-head { color: #3b5bdb; background: rgba(77,107,254,.08); }
+  .safety-head .cnt { font-weight: 400; color: var(--sub); font-size: 12px; }
+  .safety-stop {
+    margin: 10px 14px 2px; padding: 9px 12px; border-radius: 9px;
+    background: #fdecec; color: #a3181f; font-size: 13.2px; font-weight: 600;
+    border: 1px dashed #f0b8ba; line-height: 1.7;
+  }
+  /* 疑似换人/方向反转：先确认"说的是不是同一个人"，再谈辨证（架构层问题一） */
+  .safety-switch {
+    margin: 10px 14px 2px; padding: 9px 12px; border-radius: 9px;
+    background: #eff5fd; color: #1f4f86; font-size: 13px;
+    border: 1px dashed #b7cff0; line-height: 1.75;
+  }
+  .safety-switch b { color: #123a68; }
+  .safety-list { padding: 4px 14px 12px; }
+  .safety-item { padding: 9px 0; border-bottom: 1px dashed #f2dfe0; }
+  .safety-card.medium .safety-item { border-bottom-color: #f1e6d0; }
+  .safety-card.info .safety-item { border-bottom-color: #e2ebfa; }
+  .safety-item:last-child { border-bottom: none; }
+  .safety-item .hd { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .safety-item .nm { font-weight: 600; color: var(--ink); font-size: 13.8px; }
+  .badge {
+    font-size: 11px; padding: 1px 7px; border-radius: 20px; font-weight: 600;
+    border: 1px solid transparent; white-space: nowrap; line-height: 1.6;
+  }
+  .badge.high { background: #fdecec; color: #b4232a; border-color: #f3c4c6; }
+  .badge.medium { background: #fdf4e3; color: #a15c06; border-color: #f0dcb4; }
+  .badge.info { background: #eef1fe; color: #3b5bdb; border-color: #d5ddfb; }
+  .badge.tag { background: #f2f5f9; color: #5b6675; border-color: #e2e8f0; font-weight: 500; }
+  /* 五档处置徽章（判据在后端 app/safety/tiers.py::classify） */
+  .badge.tier-forbid { background: #fdecec; color: #b4232a; border-color: #f3c4c6; }
+  .badge.tier-confirm { background: #fdf4e3; color: #a15c06; border-color: #f0dcb4; }
+  .badge.tier-not_needed { background: #f4f5f7; color: #5b6675; border-color: #e2e8f0; }
+  .badge.tier-conditional { background: #eef6ff; color: #1f5f9e; border-color: #cfe3f6; }
+  .badge.tier-ok { background: #eefaf0; color: #26723a; border-color: #cbe9d3; }
+  .safety-states {
+    margin: 10px 14px 0; font-size: 13px; color: #6b3a86; background: #f8f3fc;
+    border-left: 3px solid #9a6bc4; padding: 8px 12px; border-radius: 0 8px 8px 0;
+    line-height: 1.75;
+  }
+  .safety-states b { color: #5a2c78; }
+  .src .cred {
+    font-size: 11.5px; border-radius: 999px; padding: 1px 7px; margin-left: 6px;
+    border: 1px solid; flex-shrink: 0;
+  }
+  .src .cred.background { color: #8a5a2a; background: #fbf3e6; border-color: #efd9b0; }
+  .src .cred.reject { color: #b4232a; background: #fdecec; border-color: #f3c4c6; }
+  .safety-item .why { color: #4a5563; font-size: 13px; margin-top: 5px; line-height: 1.7; }
+  .safety-item .notfor { color: #8a5a2a; font-size: 12.8px; margin-top: 3px; }
+  /* 档位依据：把结论绑回"你命中了哪些条件" */
+  .safety-item .cond { margin-top: 5px; font-size: 12.6px; color: #4a5563; line-height: 1.7; }
+  .safety-item .cond b { color: #1f5f9e; }
+  /* 结论挂起：条件未评估时既不放行也不警告 */
+  .safety-item .pending {
+    margin-top: 5px; font-size: 12.7px; color: #8a5a2a; background: #fbf3e6;
+    border-left: 3px solid #d9a154; padding: 5px 10px; border-radius: 0 6px 6px 0; line-height: 1.75;
+  }
+  .safety-item .reading {
+    margin-top: 6px; font-size: 13px; color: #33404f; background: #f7fafc;
+    border-left: 3px solid #9fb3c8; padding: 7px 11px; border-radius: 0 6px 6px 0; line-height: 1.75;
+  }
+  .safety-item .reading b { color: var(--ink); }
+  .safety-item .reading.t-forbid { background: #fdecec; border-left-color: #d9534f; color: #7d1f24; }
+  .safety-item .reading.t-conditional { background: #fff7ec; border-left-color: #e8a33d; color: #7a3b06; }
+  .safety-item .reading.t-ok { background: #f2fbf4; border-left-color: #6dbd83; color: #235c33; }
+  .safety-item .verdict {
+    margin-top: 6px; font-size: 13px; color: #7a3b06; background: #fff7ec;
+    border-left: 3px solid #e8a33d; padding: 6px 10px; border-radius: 0 6px 6px 0; line-height: 1.7;
+  }
+  .safety-sub { padding: 10px 14px 0; font-size: 12.5px; color: var(--sub); font-weight: 600; }
+  .safety-sub + .safety-list { padding-top: 2px; }
+  .safety-foot { padding: 8px 14px 12px; font-size: 11.6px; color: #9aa2b1; line-height: 1.6; }
+
+  /* 追问条：信息不足时"主动开口问"是产品主干能力（app/inquiry.py） */
+  .ask-box {
+    margin: 10px 0 4px; padding: 12px 14px; border-radius: 12px;
+    border: 1px solid #cfe3d0; background: #f4fbf5;
+  }
+  .ask-hd { font-size: 12.5px; color: #2f6b3a; font-weight: 600; margin-bottom: 9px; }
+  .ask-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ask-chip {
+    padding: 6px 12px; border-radius: 999px; cursor: pointer;
+    border: 1px solid #a9d3b0; background: #fff; color: #276032;
+    font-size: 13px; font-family: inherit; transition: all .15s;
+  }
+  .ask-chip:hover { background: #e6f6e9; border-color: #7cbf89; }
+
+  /* 记忆面板：冲突提示 + 行内编辑 */
+  #modal .warn-box {
+    border: 1px solid #f0dcb4; background: #fdfaf1; border-radius: 10px;
+    padding: 10px 12px; margin-bottom: 12px; font-size: 13px;
+  }
+  #modal .warn-box .t { font-weight: 600; color: #a15c06; margin-bottom: 4px; }
+  #modal .warn-box .o { color: #4a5563; line-height: 1.75; }
+  #modal .warn-box .retest {
+    margin-top: 8px; border: none; border-radius: 8px; cursor: pointer;
+    background: var(--brand); color: #fff; padding: 6px 14px; font-size: 12.5px;
+  }
+  #modal .tl { font-size: 12.6px; color: #4a5563; padding: 3px 0; }
+  #modal .tl .r { color: var(--sub); margin-right: 6px; }
+  #modal .edit-btn {
+    margin-left: auto; flex-shrink: 0; border: none; background: none; cursor: pointer;
+    color: var(--brand); font-size: 12px;
+  }
+  #modal .kv .val-edit {
+    flex: 1; min-width: 0; border: 1.4px solid var(--brand); border-radius: 6px;
+    padding: 2px 6px; font-size: 13px; outline: none;
+  }
+
+  /* 判定结果卡片 */
+  .const-card {
+    margin-top: 12px; border: 1px solid #cdece6; border-radius: 12px;
+    background: var(--brand-weak); padding: 14px 18px;
+  }
+  .const-card .head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+  .const-card .primary { font-size: 19px; font-weight: 800; color: var(--brand); }
+  .const-card .tend { font-size: 13px; color: var(--accent); }
+  .score-row { display: flex; align-items: center; gap: 9px; margin: 5px 0; font-size: 12.8px; }
+  .score-row .nm { width: 74px; color: #3a4552; flex-shrink: 0; }
+  .score-row .track { flex: 1; height: 6px; background: #e2eeeb; border-radius: 999px; overflow: hidden; }
+  .score-row .fill { height: 100%; background: #8fd3c7; border-radius: 999px; }
+  .score-row.on .fill { background: var(--brand); }
+  .score-row .val { width: 46px; text-align: right; color: var(--sub); font-variant-numeric: tabular-nums; }
+  .const-card .saved-note {
+    margin-top: 10px; padding: 7px 10px; border-radius: 8px; font-size: 12.3px;
+    background: #e6f7f2; color: #0c5f58; line-height: 1.6;
+  }
+
+  .status-line { display: flex; align-items: center; gap: 8px; color: var(--sub); font-size: 13.5px; }
+  .dot-spinner { display: inline-flex; gap: 4px; }
+  .dot-spinner i { width: 5px; height: 5px; border-radius: 50%; background: var(--brand); animation: blink 1.2s infinite both; }
+  .dot-spinner i:nth-child(2) { animation-delay: .2s; }
+  .dot-spinner i:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%,80%,100% { opacity: .25; } 40% { opacity: 1; } }
+  .cursor-blink {
+    display: inline-block; width: 8px; height: 16px; background: var(--brand);
+    border-radius: 2px; vertical-align: -3px; margin-left: 2px; animation: blink 1s infinite;
+  }
+
+  /* 输入区 */
+  #input-zone { padding: 8px 24px 16px; }
+
+  /* 快速作答条（点选 1~5 档） */
+  #quick-bar {
+    max-width: 820px; margin: 0 auto 10px; display: none;
+    border: 1px solid #cdece6; border-radius: 14px; background: var(--brand-weak);
+    padding: 10px 14px;
+  }
+  #quick-bar.show { display: block; }
+  #quick-bar .qq-head {
+    display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;
+  }
+  #quick-bar .qq-prog {
+    font-size: 12px; color: var(--brand); font-weight: 700; white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  #quick-bar .qq-text { font-size: 14px; color: var(--ink); line-height: 1.55; }
+  #quick-bar .qq-choices { display: flex; gap: 8px; flex-wrap: wrap; }
+  #quick-bar .qq-choices button {
+    flex: 1; min-width: 64px; padding: 9px 0; border-radius: 10px; cursor: pointer;
+    border: 1.5px solid #bfe3da; background: #fff; color: #3a4552; font-size: 13.5px;
+    transition: all .12s;
+  }
+  #quick-bar .qq-choices button:hover {
+    border-color: var(--brand); color: var(--brand); background: #fff;
+    transform: translateY(-1px);
+  }
+  #quick-bar .qq-choices button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  #quick-bar .qq-tip { font-size: 12px; color: var(--sub); margin-top: 7px; }
+
+  #input-box {
+    max-width: 820px; margin: 0 auto; border: 1.5px solid var(--line); border-radius: 16px;
+    background: #fff; padding: 12px 14px; box-shadow: 0 2px 10px rgba(20,30,50,.05);
+  }
+  #input-box:focus-within { border-color: var(--brand); }
+  #input-box textarea {
+    width: 100%; border: none; outline: none; resize: none; font-size: 15px;
+    font-family: inherit; line-height: 1.6; max-height: 160px; background: transparent;
+  }
+  #input-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+  #hint { font-size: 12px; color: var(--sub); }
+  #btn-send { border: none; background: var(--brand); color: #fff; border-radius: 10px; padding: 7px 18px; font-size: 14px; cursor: pointer; }
+  #btn-send:disabled { background: #c3cbdd; cursor: not-allowed; }
+  #ai-notice { max-width: 820px; margin: 10px auto 0; text-align: center; font-size: 12px; color: var(--sub); }
+
+  #toast {
+    position: fixed; top: 18px; left: 50%; transform: translateX(-50%);
+    background: #26303c; color: #fff; padding: 9px 20px; border-radius: 10px;
+    font-size: 13.5px; display: none; z-index: 99;
+  }
+
+  /* 档案/记忆弹层 */
+  #modal-mask {
+    position: fixed; inset: 0; background: rgba(20,30,50,.35); z-index: 100;
+    display: none; align-items: center; justify-content: center;
+  }
+  #modal-mask.show { display: flex; }
+  #modal {
+    width: 560px; max-width: 92vw; max-height: 76vh; overflow-y: auto;
+    background: #fff; border-radius: 14px; padding: 20px 24px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.25); font-size: 13.5px; line-height: 1.8;
+  }
+  #modal h3 { font-size: 15.5px; margin-bottom: 8px; color: var(--brand); }
+  #modal .sec { margin-bottom: 14px; }
+  #modal .kv { padding: 5px 0; border-bottom: 1px dashed var(--line); display: flex; gap: 10px; }
+  #modal .kv b { flex-shrink: 0; width: 110px; color: var(--brand); }
+  #modal .kv .del {
+    margin-left: auto; flex-shrink: 0; border: none; background: none; cursor: pointer;
+    color: var(--sub); font-size: 12px;
+  }
+  #modal .kv .del:hover { color: var(--danger); }
+  #modal .close-row { text-align: right; margin-top: 8px; }
+  #modal .close-row button {
+    border: none; background: var(--brand); color: #fff; border-radius: 8px;
+    padding: 7px 20px; cursor: pointer;
+  }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-thumb { background: #d4dae3; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+<div id="modal-mask"><div id="modal"></div></div>
+
+<aside id="sidebar">
+  <div class="side-head"><div class="logo">🌿</div><b>体质辨识问诊</b></div>
+  <button id="btn-new">✚ 新建问诊</button>
+  <button id="btn-manage">☑ 多选管理</button>
+  <div id="conv-list"></div>
+  <div id="manage-bar">
+    <button id="btn-cancel-manage">取消</button>
+    <button id="btn-batch-del" class="btn-batch-del" disabled>删除所选（0）</button>
+  </div>
+  <div class="side-links">
+    <a href="/">← 切换到「养生问答」模式</a>
+    <a href="#" id="link-mem">📒 查看长期记忆与档案</a>
+    <a href="#" id="link-plan" title="食疗 / 经络穴位 / 运动起居三个专家并行出方案">🧩 生成系统调理方案（多智能体）</a>
+  </div>
+  <div class="side-foot">
+    量表简化自《中医体质分类与判定》<br>结果供养生参考，非临床诊断。
+  </div>
+</aside>
+
+<main id="main">
+  <div id="topbar">
+    <span class="stage-chip" id="stage-chip">未开始</span>
+    <div class="bar-wrap"><div class="bar" id="bar"></div></div>
+    <span class="count" id="count">0 / 27</span>
+    <span id="mem-badge" title="三层记忆：近期原文 + 早期纪要 + 跨会话档案与长期记忆">记忆 —</span>
+  </div>
+
+  <div id="chat-scroll">
+    <div id="chat-inner">
+      <div id="welcome">
+        <div class="big-logo">🌿</div>
+        <h1>体质辨识问诊</h1>
+        <p>27 道自评题，由 Agent 逐题询问并判定你的体质，<br>再结合中医典籍给出饮食、起居、运动、情志四方面调养建议。</p>
+        <button class="sample">我想测一下自己是什么体质</button>
+        <div id="profile-hint"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="input-zone">
+    <div id="quick-bar">
+      <div class="qq-head">
+        <span class="qq-prog" id="qq-prog"></span>
+        <span class="qq-text" id="qq-text"></span>
+      </div>
+      <div class="qq-choices" id="qq-choices"></div>
+      <div class="qq-tip">点击即完成作答；也可在下方输入框补充说明后再点击，说明会一并告诉助手</div>
+    </div>
+    <div id="input-box">
+      <textarea id="input" rows="1" placeholder="输入你的回答，Enter 发送，Shift+Enter 换行"></textarea>
+      <div id="input-foot">
+        <span id="hint">逐题作答，凭最近一年的真实感受回答即可</span>
+        <button id="btn-send">发送</button>
+      </div>
+    </div>
+    <div id="ai-notice">内容由 AI 生成，仅供参考，不能替代专业医疗建议</div>
+  </div>
+</main>
+
+<script>
+/* ==================== 全局状态 ==================== */
+let convs = [], activeId = null, generating = false;
+let manageMode = false, selected = new Set();
+let sources = [];                 // 本轮的引用来源（跨工具轮累积）
+let traceEl = null;               // 当前 AI 消息里的"思考过程"容器
+let curQ = null;                  // 当前待答题（出题事件驱动，题目只可能来自量表）
+
+const $ = s => document.querySelector(s);
+const chatInner = $('#chat-inner'), chatScroll = $('#chat-scroll');
+const input = $('#input'), btnSend = $('#btn-send');
+
+/* ==================== 工具函数 ==================== */
+function toast(text, ms = 2400) {
+  const t = $('#toast'); t.textContent = text; t.style.display = 'block';
+  clearTimeout(t._timer); t._timer = setTimeout(() => t.style.display = 'none', ms);
+}
+function esc(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function copyText(text) {
+  const done = () => toast('已复制到剪贴板');
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else fallbackCopy(text, done);
+}
+function fallbackCopy(text, done) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); done(); } catch (e) { toast('复制失败'); }
+  ta.remove();
+}
+function md(text) {
+  const lines = esc(text).split('\n');
+  let html = '', inUl = false;
+  const inline = t => t
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code style="background:#f2f4f8;border-radius:4px;padding:1px 5px;font-size:13px">$1</code>');
+  for (const ln of lines) {
+    const s = ln.trim();
+    if (/^[-•*]\s+/.test(s)) {
+      if (!inUl) { html += '<ul>'; inUl = true; }
+      html += '<li>' + inline(s.replace(/^[-•*]\s+/, '')) + '</li>';
+    } else {
+      if (inUl) { html += '</ul>'; inUl = false; }
+      if (!s) continue;
+      if (/^#{1,4}\s/.test(s)) html += '<h3>' + inline(s.replace(/^#{1,4}\s/, '')) + '</h3>';
+      else html += '<p>' + inline(s) + '</p>';
+    }
+  }
+  if (inUl) html += '</ul>';
+  return html;
+}
+function scrollBottom() { chatScroll.scrollTop = chatScroll.scrollHeight; }
+async function api(path, opts) {
+  const r = await fetch(path, opts);
+  if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.status);
+  return r.json();
+}
+
+/* ==================== 顶栏：阶段 / 进度 / 记忆 ==================== */
+function setStage(label) { $('#stage-chip').textContent = label; }
+function setProgress(done, total) {
+  $('#count').textContent = `${done} / ${total}`;
+  $('#bar').style.width = total ? (done / total * 100) + '%' : '0';
+}
+function setMemory(stats) {
+  if (!stats) return;
+  const b = $('#mem-badge');
+  b.textContent = `记忆 历史${stats.total_messages ?? 0}·注入${stats.recent_kept ?? 0}` +
+                  `·档案${stats.profile_keys ?? 0}·召回${stats.memories_recalled ?? 0}`;
+}
+
+/* ==================== 快速作答条（点选 1~5 档） ==================== */
+const FREQ_LABELS = ['没有', '很少', '有时', '经常', '总是'];
+function showQuickBar() {
+  if (!curQ) return;
+  $('#qq-prog').textContent = `第 ${curQ.index} / ${curQ.total} 题 · ${curQ.type_name}`;
+  $('#qq-text').textContent = curQ.question;
+  const box = $('#qq-choices');
+  box.innerHTML = '';
+  FREQ_LABELS.forEach((label, i) => {
+    const btn = document.createElement('button');
+    btn.textContent = label;
+    btn.addEventListener('click', () => quickSend(i + 1, label, btn));
+    box.appendChild(btn);
+  });
+  $('#quick-bar').classList.add('show');
+  scrollBottom();
+}
+function hideQuickBar() { $('#quick-bar').classList.remove('show'); curQ = null; }
+function lockQuickBar(lock) {
+  document.querySelectorAll('#qq-choices button')
+    .forEach(b => b.disabled = lock);
+}
+async function quickSend(score, label, btn) {
+  if (generating) { toast('请等待当前回答完成'); return; }
+  // 输入框里有字 → 作为补充说明一并提交；没有 → 纯点选（服务端秒回）
+  const note = input.value.trim();
+  const display = note ? `${label}（${note}）` : label;
+  input.value = ''; autoGrow();
+  lockQuickBar(true);
+  try {
+    await send(display, {score, note});
+  } finally {
+    lockQuickBar(false);
+  }
+}
+
+/* ==================== 多选批量删除 ==================== */
+function setManageMode(on) {
+  manageMode = on; selected.clear();
+  document.body.classList.toggle('manage-mode', on);
+  $('#btn-manage').style.display = on ? 'none' : 'block';
+  updateBatchBar(); loadConvs();
+}
+function updateBatchBar() {
+  $('#btn-batch-del').textContent = `删除所选（${selected.size}）`;
+  $('#btn-batch-del').disabled = selected.size === 0;
+}
+$('#btn-manage').addEventListener('click', () => setManageMode(true));
+$('#btn-cancel-manage').addEventListener('click', () => setManageMode(false));
+$('#btn-batch-del').addEventListener('click', async () => {
+  if (!selected.size) return;
+  if (!confirm(`删除所选 ${selected.size} 个问诊记录？不可恢复。`)) return;
+  await api('/api/conversations/delete-batch', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ids: [...selected]})
+  });
+  if (selected.has(activeId)) { activeId = null; renderChatArea(); resetTop(); }
+  toast(`已删除 ${selected.size} 条记录`);
+  setManageMode(false);
+  loadConvs();
+});
+
+/* ==================== 侧栏 ==================== */
+async function loadConvs() {
+  convs = await api('/api/conversations');
+  document.querySelectorAll('.conv-item').forEach(e => e.remove());
+  const list = $('#conv-list');
+  for (const c of convs) list.appendChild(convNode(c));
+}
+function convNode(c) {
+  const div = document.createElement('div');
+  div.className = 'conv-item' + (c.id === activeId ? ' active' : '');
+  div.innerHTML = `
+    <label class="sel-box"><input type="checkbox" ${selected.has(c.id) ? 'checked' : ''}></label>
+    ${c.pinned ? '<span class="pin-ico">📌</span>' : ''}
+    <span class="conv-title">${esc(c.title)}</span>
+    <span class="conv-ops">
+      <button class="pin" title="${c.pinned ? '取消置顶' : '置顶'}">${c.pinned ? '📍' : '📌'}</button>
+      <button class="ren" title="重命名">✏️</button>
+      <button class="del" title="删除">🗑️</button>
+    </span>`;
+  div.addEventListener('click', e => {
+    if (e.target.closest('.conv-ops')) return;
+    if (manageMode) {
+      if (!e.target.closest('.sel-box')) {
+        const cb = div.querySelector('.sel-box input');
+        cb.checked = !cb.checked;
+      }
+      const on = div.querySelector('.sel-box input').checked;
+      on ? selected.add(c.id) : selected.delete(c.id);
+      updateBatchBar();
+      return;
+    }
+    if (generating) { toast('请等待当前回答完成'); return; }
+    openConv(c.id);
+  });
+  div.querySelector('.pin').addEventListener('click', async () => {
+    await api(`/api/conversations/${c.id}`, {
+      method: 'PATCH', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({pinned: !c.pinned})
+    });
+    loadConvs();
+  });
+  div.querySelector('.ren').addEventListener('click', () => startRename(div, c));
+  div.querySelector('.del').addEventListener('click', async () => {
+    if (!confirm(`删除「${c.title}」？不可恢复。`)) return;
+    await api(`/api/conversations/${c.id}`, {method: 'DELETE'});
+    if (activeId === c.id) { activeId = null; renderChatArea(); resetTop(); }
+    loadConvs();
+  });
+  return div;
+}
+function startRename(div, c) {
+  const titleEl = div.querySelector('.conv-title');
+  const old = c.title;
+  titleEl.outerHTML = `<input class="rename-input" value="${esc(old)}">`;
+  const inp = div.querySelector('.rename-input');
+  inp.focus(); inp.select();
+  const finish = async save => {
+    const v = inp.value.trim();
+    if (save && v && v !== old) {
+      await api(`/api/conversations/${c.id}`, {
+        method: 'PATCH', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({title: v.slice(0, 40)})
+      });
+    }
+    loadConvs();
+  };
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') finish(true);
+    if (e.key === 'Escape') finish(false);
+    e.stopPropagation();
+  });
+  inp.addEventListener('blur', () => finish(true));
+}
+
+/* ==================== 档案 / 记忆弹层（P2-3 用户可见可修正） ==================== */
+/* 记忆按会话隔离（2026-09-16）后，档案/记忆接口都要带 conv_id——
+   不传的话看到的是"无会话"那份，跟用户正在聊的这个对话不是一回事。 */
+function panelUrl() {
+  return '/api/profile/panel' + (activeId !== null ? `?conv_id=${activeId}` : '');
+}
+function memUrl() {
+  return '/api/memories' + (activeId !== null ? `?conv_id=${activeId}` : '');
+}
+function scopeQ() {
+  return activeId !== null ? `?conv_id=${activeId}` : '';
+}
+$('#link-mem').addEventListener('click', async e => {
+  e.preventDefault();
+  let panel = {fields: [], conflicts: [], timeline: []}, mems = [];
+  try {
+    [panel, mems] = await Promise.all([api(panelUrl()), api(memUrl())]);
+  } catch (err) { toast('加载失败：' + err.message); return; }
+  const m = $('#modal');
+
+  /* 冲突提示：档案与自述方向相反（如体质标签说阴虚、自述却畏寒）——
+     给用户一个自助复测入口，而不是让他对着一堆键值对发呆。 */
+  const conflicts = panel.conflicts || [];
+  const warnHtml = conflicts.length ? `
+    <div class="warn-box">
+      <div class="t">⚠️ 档案与你的自述有对不上的地方（共 ${conflicts.length} 处）</div>
+      ${conflicts.map(c => `<div class="o">· ${esc(c.detail || '')}<br>
+        <span style="color:#7a8494">建议：${esc(c.action || '复核体质判定')}</span></div>`).join('')}
+      <button class="retest">🔄 重新做一次 27 题体质测试</button>
+    </div>` : '';
+
+  const fields = panel.fields || [];
+  const kvRows = fields.length
+    ? fields.map(f => `<div class="kv"><b>${esc(f.key)}</b><span>${esc(f.value)}</span>
+         <button class="edit-btn" data-key="${esc(f.key)}">修改</button>
+         <button class="del" data-key="${esc(f.key)}">删除</button></div>`).join('')
+    : '<div style="color:#7a8494">（暂无档案——完成一次体质辨识后自动生成）</div>';
+
+  const tl = panel.timeline || [];
+  const tlHtml = tl.length
+    ? tl.slice(-12).map((t, i) => `<div class="tl"><span class="r">#${i + 1}</span>${esc(t)}</div>`).join('')
+    : '<div style="color:#7a8494">（暂无——档案会随你逐轮补充自动累积）</div>';
+
+  const memRows = mems.length
+    ? mems.slice(0, 30).map(x => `<div style="padding:3px 0">· ${esc(x.text)}</div>`).join('')
+    : '<div style="color:#7a8494">（暂无长期记忆条目）</div>';
+
+  m.innerHTML = `
+    <h3>📒 本次对话的档案（只属于这段对话 · 可修改）</h3>
+    <div style="color:#7a8494;font-size:12.5px;padding:0 0 8px">
+      记忆按**会话**隔离：新开的对话不会继承这里的任何内容；
+      想让某条信息跨对话保留，直接说一句「记住……」，它才会进长期记忆。
+    </div>
+    ${warnHtml}
+    <div class="sec">${kvRows}</div>
+    <h3>🕒 主诉时间线（本次对话里说过的，按顺序）</h3>
+    <div class="sec">${tlHtml}</div>
+    <h3>🧠 记忆条目（本次对话 ${mems.length} 条${(panel.archived_memories || 0) ? ` · 历史归档 ${panel.archived_memories} 条已不再参与回答` : ''}）</h3>
+    <div class="sec">${memRows}</div>
+    <div class="close-row"><button onclick="document.getElementById('modal-mask').classList.remove('show')">关闭</button></div>`;
+
+  const close = () => $('#modal-mask').classList.remove('show');
+  // 复测入口：直接触发一次体质辨识流程
+  m.querySelector('.retest')?.addEventListener('click', () => {
+    close(); input.value = '我想重新测一下自己是什么体质'; send();
+  });
+  // 删除某项
+  m.querySelectorAll('.kv .del').forEach(b => b.addEventListener('click', async () => {
+    if (!confirm(`删除档案项「${b.dataset.key}」？`)) return;
+    await api(`/api/profile/${encodeURIComponent(b.dataset.key)}${scopeQ()}`, {method: 'DELETE'});
+    toast('已删除'); close();
+  }));
+  // 行内修正：改错的值不用整条删掉重来
+  m.querySelectorAll('.kv .edit-btn').forEach(b => b.addEventListener('click', async () => {
+    const row = b.closest('.kv');
+    const span = row.querySelector('span');
+    const old = span.textContent;
+    span.outerHTML = `<input class="val-edit" value="${esc(old)}">`;
+    const inp = row.querySelector('.val-edit');
+    inp.focus(); inp.select();
+    const save = async ok => {
+      const v = inp.value.trim();
+      if (ok && v && v !== old) {
+        await api(`/api/profile/${encodeURIComponent(b.dataset.key)}${scopeQ()}`, {
+          method: 'PUT', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({value: v})
+        });
+        toast('已更新');
+      }
+      close();
+    };
+    inp.addEventListener('keydown', ev => {
+      if (ev.key === 'Enter') save(true);
+      if (ev.key === 'Escape') save(false);
+      ev.stopPropagation();
+    });
+    inp.addEventListener('blur', () => save(true));
+  }));
+  $('#modal-mask').classList.add('show');
+});
+$('#modal-mask').addEventListener('click', e => {
+  if (e.target.id === 'modal-mask') e.target.classList.remove('show');
+});
+
+/* ==================== 消息渲染 ==================== */
+function renderChatArea() {
+  chatInner.innerHTML = '';
+  if (activeId === null) chatInner.appendChild(buildWelcome());
+  else { curQ = null; hideQuickBar(); }
+  loadProfileHint();
+}
+function buildWelcome() {
+  const w = document.createElement('div');
+  w.id = 'welcome';
+  w.innerHTML = `<div class="big-logo">🌿</div><h1>体质辨识问诊</h1>
+    <p>27 道自评题，点选按钮即可作答（也可补充文字说明），<br>Agent 判定你的体质后，结合中医典籍给出饮食、起居、运动、情志调养建议。</p>
+    <button class="sample">我想测一下自己是什么体质</button>
+    <div id="profile-hint"></div>`;
+  w.querySelector('.sample').addEventListener('click', () => {
+    input.value = '我想测一下自己是什么体质'; send();
+  });
+  return w;
+}
+/* 欢迎页展示**本会话**已有的体质档案。
+   注意：2026-09-16 起体质不再自动跨会话继承（新开对话 = 干净的开始），
+   所以这里只提示"本次对话里的辨识结果"。 */
+async function loadProfileHint() {
+  try {
+    const prof = await api('/api/profile' + (activeId !== null ? `?conv_id=${activeId}` : ''));
+    const el = $('#profile-hint');
+    if (!el) return;
+    if (prof && prof['体质判定']) {
+      el.style.display = 'block';
+      el.innerHTML = `📋 本次对话已辨识出体质：<b>${esc(prof['体质判定'])}</b>。<br>
+        <span class="re">本次对话中的问答会参考它。新开的对话不会自动继承——
+        想长期保留，说一句「记住我的体质是……」即可。</span>`;
+    } else { el.style.display = 'none'; }
+  } catch (e) { /* 忽略 */ }
+}
+function addUserMsg(text) {
+  const d = document.createElement('div');
+  d.className = 'msg-user';
+  d.innerHTML = `<div class="bubble">${esc(text)}</div>
+    <span class="msg-ops"><button class="copy">复制</button></span>`;
+  d.querySelector('.copy').addEventListener('click', () => copyText(text));
+  chatInner.appendChild(d); scrollBottom();
+}
+function addAiShell() {
+  const d = document.createElement('div');
+  d.className = 'msg-ai';
+  d.innerHTML = `
+    <div class="avatar">🌿</div>
+    <div class="body">
+      <details class="think" open>
+        <summary><span class="chev">▶</span>💭 思考过程（工具调用与检索）</summary>
+        <div class="think-body"><div class="trace"></div></div>
+      </details>
+      <div class="status-line">
+        <span class="dot-spinner"><i></i><i></i><i></i></span>
+        <span class="status-text">正在理解你的问题…</span>
+      </div>
+      <div class="safety-slot"></div>
+      <div class="ask-slot"></div>
+      <div class="content"></div>
+    </div>`;
+  chatInner.appendChild(d); scrollBottom();
+  traceEl = d.querySelector('.trace');
+  return d;
+}
+/* 追问条：信息不足时由代码判定并下发（app/inquiry.py）。
+   点一下把「【缺项】我的情况是：」填进输入框，用户接着写自己的情况即可。
+   问卷进行中不会出现（后端在 COLLECTING 阶段会清空追问清单）。 */
+function questionsHtml(items) {
+  if (!items || !items.length) return '';
+  return `<div class="ask-box">
+    <div class="ask-hd">❓ 先跟你确认几件事（信息补全了我才能给针对你的建议）— 点一下填进输入框</div>
+    <div class="ask-list">${items.map(q =>
+      `<button class="ask-chip" title="${esc(q.ask || '')}" data-label="${esc(q.label || '')}">${esc(q.label || '')}</button>`
+    ).join('')}</div>
+  </div>`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('.ask-chip');
+  if (!b) return;
+  const label = b.getAttribute('data-label') || '';
+  const prefix = `【${label}】我的情况是：`;
+  input.value = (input.value.trim() ? input.value.trim() + '\n' : '') + prefix;
+  if (typeof autoGrow === 'function') autoGrow();
+  input.focus();
+  input.setSelectionRange(input.value.length, input.value.length);
+});
+
+function traceLine(html) {
+  if (!traceEl) return;
+  const d = document.createElement('div');
+  d.className = 'ln';
+  d.innerHTML = html;
+  traceEl.appendChild(d); scrollBottom();
+}
+function finishThink(shell, hasContent) {
+  const box = shell.querySelector('details.think');
+  traceEl = null;
+  if (!box) return;
+  if (!hasContent) { box.remove(); return; }
+  box.removeAttribute('open');
+  box.querySelector('summary').innerHTML =
+    '<span class="chev">▶</span>💭 思考过程（已折叠 · 点击展开）';
+}
+function attachCopy(msgDiv, rawText) {
+  const ops = document.createElement('div');
+  ops.className = 'msg-ops';
+  ops.innerHTML = `<button class="copy">复制</button>`;
+  ops.querySelector('.copy').addEventListener('click', () => copyText(rawText));
+  msgDiv.querySelector('.body').appendChild(ops);
+}
+function sourcesHtml(list) {
+  if (!list || !list.length) return '';
+  // 可采信性徽章见 app/credibility.py：传说/巫术类记载已剔除或降级为文化背景
+  const items = list.map(s => {
+    const lv = s.credibility || '';
+    const cred = (lv === 'background' || lv === 'reject')
+      ? `<span class="cred ${lv}">${esc(s.credibility_label || (lv === 'reject' ? '不可采信' : '仅作文化背景'))}</span>`
+      : '';
+    return `<div class="src"><span>📄 ${esc(s.source)} · ${esc(s.chapter || '')}</span>${cred}
+     <span class="score">${s.score}</span></div>`;
+  }).join('');
+  return `<details class="sources-box">
+      <summary>📚 引用来源（${list.length}）</summary>
+      <div class="src-list">${items}</div>
+    </details>`;
+}
+
+/* ================================================================
+   安全判读卡（后端 app/safety 命中 → 先于正文渲染）
+   ================================================================ */
+const LV_TEXT = {high: '高风险', medium: '需注意', info: '提示'};
+/* 五档处置（与 app/safety/tiers.py::TIER_LABEL 对齐）。显示档位而不是风险高中低：
+   风险等级只说"东西危不危险"，档位才说"在你现在的情况下该怎么处置"。
+   「明确禁止（禁忌/有害）」与「不建议（无适应症/不必吃）」必须分开。 */
+const TIER_TEXT = {forbid: '明确禁止', confirm: '需专业确认',
+                   not_needed: '不建议（无适应症）',
+                   conditional: '对证但有条件', ok: '可执行'};
+const GAP_LABEL = {
+  age_sex: '年龄与性别', tongue: '舌象', stool_urine: '二便',
+  cold_heat: '寒热', medication: '在服用的药物',
+  chronic: '已知慢病', chief_time: '主诉时间线',
+  anticoag_use: '是否在服抗凝/抗血小板药',
+  bleeding: '出血倾向', cardiac_history: '心脏/支架病史', menopause: '月经与更年期情况',
+};
+const SCREEN_SAY = {
+  fatigue_cold_midlife_woman: '先做一组基础检查，把"看着像亚健康、其实是疾病"的情况排掉',
+  hypertension: '降压药不能停、不能自行减量；食疗中药不能替代降压药；每天记血压',
+  diabetes: '降糖药不能自行停；含糖补品要计入总热量',
+  thyroid: '按医嘱复查 TSH/FT4；左甲状腺素清晨空腹服，与钙铁/豆制品/中药隔开 4 小时',
+  ambiguous_damp: '同样的"湿"，寒湿/湿热/脾虚湿困调法相反，需靠舌苔与二便区分',
+};
+const SCREEN_NAME = {
+  fatigue_cold_midlife_woman: '甲功 / 血常规 / 血糖血脂 / 肝肾功能',
+  hypertension: '血压监测与复查', diabetes: '血糖管理与复查',
+  thyroid: '甲功复查', ambiguous_damp: '湿证鉴别（面诊看舌）',
+};
+/* 极简 markdown：只认 **加粗** 与换行（判读正文由后端 tiers.render 生成，格式可控）。
+   先 esc 再替换，避免注入。 */
+function mdLite(s) {
+  return esc(s).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>').replace(/\n+/g, '<br>');
+}
+function safetyHtml(ev) {
+  if (!ev) return '';
+  const allHits = ev.hits || [];
+  const conflicts = ev.conflicts || [];
+  const screening = ev.screening || [];
+  const gaps = ev.gaps || [];
+  if (!allHits.length && !conflicts.length && !ev.subject_switch) return '';
+  // 来源分流：本轮提到的展开完整卡；档案带出、本轮没提的折叠成一行提醒
+  const hits = allHits.filter(h => (h.origin || 'message') === 'message');
+  const profHits = allHits.filter(h => h.origin === 'profile');
+  // 卡片底色取"最严的那一档"（level 说的是"东西多危险"，档位才是"对你怎么处置"）
+  let level = 'info';
+  for (const h of allHits) {
+    if (h.tier === 'forbid') level = 'high';
+    else if ((h.tier === 'confirm' || h.tier === 'not_needed'
+              || h.tier === 'conditional') && level !== 'high') level = 'medium';
+    if (h.level === 'high') level = 'high';
+    else if (h.level === 'medium' && level === 'info') level = 'medium';
+  }
+  const hitsHtml = hits.map(h => {
+    const tier = h.tier || '';
+    const cls = tier ? `tier-${tier}` : (h.level || 'info');
+    const tname = h.tier_label || TIER_TEXT[tier] || '';
+    const badges = [tname
+      ? `<span class="badge ${cls}">${esc(tname)}</span>`
+      : `<span class="badge ${h.level || 'info'}">${LV_TEXT[h.level] || h.level || ''}</span>`];
+    if (h.taking) badges.push('<span class="badge high">你在服用</span>');
+    if (h.escalated) badges.push('<span class="badge high">与你的情况相关</span>');
+    for (const t of (h.tag_labels || [])) badges.push(`<span class="badge tag">${esc(t)}</span>`);
+    const why = h.why ? `<div class="why">${esc(h.why)}</div>` : '';
+    const notfor = h.not_for ? `<div class="notfor">⚠️ 不适合：${esc(h.not_for)}</div>` : '';
+    const conds = h.tier_basis
+      ? `<div class="cond">📌 档位依据：<b>${esc(h.tier_basis)}</b></div>`
+      : ((h.cond_labels || []).length
+        ? `<div class="cond">🔎 档位依据（你命中了）：<b>${h.cond_labels.map(esc).join('、')}</b></div>` : '');
+    const pend = (h.unassessed_gaps || []).length
+      ? `<div class="pending">⏳ 结论已挂起：还差 <b>${
+          h.unassessed_gaps.map(g => esc(GAP_LABEL[g] || g)).join('、')}</b>——答一下就能定</div>` : '';
+    // 用后端按「档位 × 条件」算好的 reading；无 reading 才退回 verdict
+    const body = (h.reading || h.verdict || '').trim();
+    const reading = body
+      ? `<div class="reading ${tier ? 't-' + tier : ''}">⚖️ 所以对你而言：${mdLite(body)}</div>` : '';
+    return `<div class="safety-item">
+      <div class="hd"><span class="nm">${esc(h.name)}</span>${badges.join('')}</div>
+      ${why}${notfor}${conds}${pend}${reading}</div>`;
+  }).join('');
+  const conflictHtml = conflicts.length ? `
+    <div class="safety-sub">⚠️ 档案一致性提醒（需你复核）</div>
+    <div class="safety-list">${conflicts.map(c => `<div class="safety-item">
+        <div class="why">${esc(c.detail || '')}</div>
+        <div class="notfor">处理：${esc(c.action || '建议复核体质判定')}</div>
+      </div>`).join('')}</div>` : '';
+  const screenHtml = screening.length ? `
+    <div class="safety-sub">🩺 建议到院排查（西医）</div>
+    <div class="safety-list">${screening.map(k => `<div class="safety-item">
+        <div class="why"><b>${esc(SCREEN_NAME[k] || '相关检查')}</b>：${esc(SCREEN_SAY[k] || '')}</div>
+      </div>`).join('')}</div>` : '';
+  // 缺口清单只在没有可点选追问条时才列（同一件事不说两遍）
+  const hasChips = !!(ev.questions && ev.questions.length);
+  const gapHtml = (gaps.length && !hasChips) ? `
+    <div class="safety-sub">❓ 还需向你确认（信息不足，先不给具体方药）</div>
+    <div class="safety-list">${gaps.map(g =>
+      `<div class="safety-item"><div class="why">· 缺 ${esc(GAP_LABEL[g] || g)}</div></div>`).join('')}</div>` : '';
+  const stopHtml = ev.stop ? `
+    <div class="safety-stop">⛔ 建议暂停自行服用上述涉及的中药 / 食疗，
+      先与中医师或药师确认；正在服用的西药（如降压药）请勿自行停减。</div>` : '';
+  // 换人设/方向反转：先确认"说的是不是同一个人"，且要说清依据（架构层问题一 P0）
+  const sw = ev.subject_switch_detail || null;
+  const swWhere = sw && sw.prev_label
+    ? `（前面偏「${esc(sw.prev_label)}」，这次偏「${esc(sw.cur_label || '')}」；依据：${esc(sw.where || '本会话记录')}）`
+    : '';
+  const switchHtml = ev.subject_switch ? `
+    <div class="safety-switch">🔄 <b>先确认一件事</b>：你这次说的，与<b>本次对话前面</b>提到的方向相反${swWhere}。
+      <br>在确认之前，我<b>不把前面的记录当成对你的判断依据</b>——这些是在说你自己的新情况吗？
+      如果是替别人问（家人 / 朋友），请重新描述「要看的那个人」的情况。</div>` : '';
+  const profHtml = profHits.length ? `
+    <details class="sources-box prof-box">
+      <summary>📒 来自你档案的提醒（${profHits.length}）——本轮没提到，仅顺带确认</summary>
+      <div class="safety-list">${profHits.map(h => {
+        const t = h.taking ? '（在服）' : '';
+        const tg = h.tier_label ? `[${h.tier_label}] ` : '';
+        const v = ((h.reading || h.verdict || h.why || '') + '').replace(/\*\*/g, '');
+        return `<div class="safety-item"><div class="why">· <b>${esc(h.name)}</b>${t}：${esc(tg)}${esc(v.length > 90 ? v.slice(0, 90) + '…' : v)}</div></div>`;
+      }).join('')}</div>
+    </details>` : '';
+  // 状态约束（备孕/妊娠/哺乳/儿童/高龄）优先级高于一切药名规则：单独成块、排在命中之前
+  const states = ev.states || [];
+  const statesHtml = states.length ? `
+    <div class="safety-states">🔺 <b>你的状态约束（本轮优先级最高）</b>：
+      ${states.map(s => `<b>${esc(s.label || s.key || '')}</b>${s.note ? '——' + esc(s.note) : ''}`).join('；')}
+      <br>以上几条先于任何"某味药能不能吃"的判断生效；涉及用药请一并告知医师。</div>` : '';
+  const cntBits = [];
+  const tally = {};
+  for (const h of hits) if (h.tier) tally[h.tier] = (tally[h.tier] || 0) + 1;
+  const tierBits = ['forbid', 'confirm', 'not_needed', 'conditional', 'ok']
+    .filter(t => tally[t]).map(t => `${TIER_TEXT[t]} ${tally[t]}`);
+  if (tierBits.length) cntBits.push(tierBits.join('｜'));
+  if (hits.length) cntBits.push(`本轮命中 ${hits.length} 项`);
+  if (profHits.length) cntBits.push(`档案提醒 ${profHits.length} 项`);
+  return `<div class="safety-card ${level}">
+    <div class="safety-head"><span>🛡️ 安全判读</span>
+      <span class="cnt">${cntBits.join(' · ') || '无命中'} · 由规则库强制给出，不依赖资料库检索</span></div>
+    ${switchHtml}${statesHtml}${stopHtml}
+    ${hits.length ? `<div class="safety-list">${hitsHtml}</div>` : ''}
+    ${profHtml}${conflictHtml}${screenHtml}${gapHtml}
+    <div class="safety-foot">五档处置：明确禁止 ｜ 需专业确认 ｜ 不建议（无适应症）｜ 对证但有条件 ｜ 可执行——
+      档位由「这个东西 × 你的具体情况」共同决定，同一味药换个人、换个证型结论就不同。
+      「明确禁止」是"对你有害"，「不建议」只是"对你没用、不必吃"，两者别混。
+      以上为通用安全判读，不构成诊断；具体用药与停减请遵医嘱。</div>
+  </div>`;
+}
+function constitHtml(ev) {
+  const rows = (ev.scores || []).map(s => `
+    <div class="score-row ${s.primary ? 'on' : ''}">
+      <span class="nm">${esc(s.name)}</span>
+      <span class="track"><span class="fill" style="width:${Math.max(0, Math.min(100, s.transform))}%"></span></span>
+      <span class="val">${s.transform}</span>
+    </div>`).join('');
+  return `<div class="const-card">
+      <div class="head">
+        <span class="primary">${esc(ev.primary)}</span>
+        ${ev.tendencies && ev.tendencies.length ? `<span class="tend">兼夹：${esc(ev.tendencies.join('、'))}</span>` : ''}
+      </div>
+      ${rows}
+      <div style="font-size:12px;color:#7a8494;margin-top:8px">转化分 0~100，依据标准量表公式计算，非临床诊断</div>
+      <div class="saved-note">✅ 本次结果已自动存入你的长期档案（跨会话生效，问答模式也会参考）。重新做一次测试，将自动覆盖为最新结果。</div>
+    </div>`;
+}
+
+/* ==================== 会话切换 ==================== */
+function resetTop() { setStage('未开始'); setProgress(0, 27); }
+async function openConv(id) {
+  activeId = id;
+  await loadConvs();
+  chatInner.innerHTML = '';
+  const msgs = await api(`/api/conversations/${id}/messages`);
+  for (const m of msgs) {
+    if (m.role === 'user') addUserMsg(m.content);
+    else {
+      const d = document.createElement('div');
+      d.className = 'msg-ai';
+      d.innerHTML = `<div class="avatar">🌿</div><div class="body">
+        ${safetyHtml(m.safety)}<div class="content">${md(m.content)}</div>${sourcesHtml(m.sources)}${questionsHtml((m.safety || {}).questions)}</div>`;
+      chatInner.appendChild(d);
+      attachCopy(d, m.content);
+    }
+  }
+  const st = await api(`/api/agent/${id}/state`);
+  setStage(st.stage_label); setProgress(st.answered, st.total);
+  // 恢复点选作答条：刷新/重开会话后，正在收集阶段且有当前题时继续可点选
+  if (st.stage === 'collecting' && st.question) {
+    curQ = {index: st.question.index, total: st.question.total,
+            type_name: st.question.type_name, question: st.question.question};
+    showQuickBar();
+  } else { curQ = null; hideQuickBar(); }
+  scrollBottom();
+}
+
+/* ==================== 新建 / 发送 ==================== */
+$('#btn-new').addEventListener('click', async () => {
+  if (generating) { toast('请等待当前回答完成'); return; }
+  const c = await api('/api/conversations', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({title: '问诊（体质辨识）'})
+  });
+  activeId = c.id; renderChatArea(); resetTop(); await loadConvs(); input.focus();
+});
+async function newConvIfNone() {
+  if (activeId !== null) return activeId;
+  const c = await api('/api/conversations', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({title: '问诊（体质辨识）'})
+  });
+  activeId = c.id; renderChatArea(); return c.id;
+}
+
+async function send(textArg, quick) {
+  const text = (textArg ?? input.value).trim();
+  if (!text || generating) return;
+  generating = true; btnSend.disabled = true; input.value = ''; autoGrow();
+  input.placeholder = '正在回答中…';
+
+  try {
+    const convId = await newConvIfNone();
+    $('#welcome')?.remove();
+    addUserMsg(text);
+    const shell = addAiShell();
+    const body = shell.querySelector('.body');
+    const statusText = shell.querySelector('.status-text');
+    const content = shell.querySelector('.content');
+    sources = [];
+    let answer = '', constit = '', sawThink = false;
+
+    const resp = await fetch(`/api/agent/${convId}/chat`, {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(quick ? {message: text, quick} : {message: text})
+    });
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+
+    const reader = resp.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '';
+    while (true) {
+      const {done, value} = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, {stream: true});
+      let idx;
+      while ((idx = buf.indexOf('\n\n')) >= 0) {
+        const frame = buf.slice(0, idx); buf = buf.slice(idx + 2);
+        if (!frame.startsWith('data: ')) continue;
+        const ev = JSON.parse(frame.slice(6));
+
+        if (ev.type === 'memory') {
+          setMemory(ev.stats);
+        } else if (ev.type === 'stage') {
+          setStage(ev.label); setProgress(ev.answered, ev.total);
+          // 离开收集阶段（判定/已出结果）→ 收起点选条
+          if (ev.stage !== 'collecting') hideQuickBar();
+        } else if (ev.type === 'question') {
+          // 出题事件：题干来自服务端量表，界面渲染点选作答条
+          curQ = ev; showQuickBar();
+        } else if (ev.type === 'tool') {
+          statusText.textContent = ev.label;
+          traceLine(`<span class="t">🔧</span><span>${esc(ev.label)}</span>`);
+          sawThink = true;
+        } else if (ev.type === 'reflection') {
+          for (const a of ev.attempts) {
+            const cls = a.accepted ? 'hit' : 'miss';
+            const tag = a.accepted ? '命中' : '不足';
+            traceLine(`<span class="t">🔍</span><span>检索第${a.round}轮 top1=` +
+              `<b class="${cls}">${a.top_score}</b> ${tag}</span>` +
+              `<span class="q">「${esc(a.query)}」</span>`);
+          }
+          sawThink = true;
+        } else if (ev.type === 'sources') {
+          sources = ev.sources || sources;
+        } else if (ev.type === 'safety') {
+          // 安全判读先于正文渲染：附子有毒/甘草升血压这类结论必须第一眼看到
+          const slot = shell.querySelector('.safety-slot');
+          if (slot) slot.innerHTML = safetyHtml(ev);
+          const askSlot = shell.querySelector('.ask-slot');
+          if (askSlot && ev.questions && ev.questions.length) {
+            askSlot.innerHTML = questionsHtml(ev.questions);
+          }
+          if ((ev.hits || []).length) sawThink = true;
+          scrollBottom();
+        } else if (ev.type === 'questions') {
+          const askSlot = shell.querySelector('.ask-slot');
+          if (askSlot) askSlot.innerHTML = questionsHtml(ev.items);
+          scrollBottom();
+        } else if (ev.type === 'constitution') {
+          constit = constitHtml(ev);
+        } else if (ev.type === 'delta') {
+          answer += ev.text;
+          statusText.parentElement.style.display = 'none';
+          content.innerHTML = md(answer) + '<span class="cursor-blink"></span>';
+          scrollBottom();
+        } else if (ev.type === 'error') {
+          throw new Error(ev.text);
+        } else if (ev.type === 'done') {
+          statusText.parentElement.style.display = 'none';
+          content.innerHTML = md(answer || ev.answer) + constit + sourcesHtml(sources);
+        }
+      }
+    }
+    finishThink(shell, sawThink);
+    attachCopy(shell, answer + (constit ? '\n（含体质判定卡片）' : ''));
+    scrollBottom();
+    loadConvs();
+  } catch (e) {
+    toast('出错了：' + e.message, 4000);
+    chatInner.lastElementChild?.remove?.();
+  } finally {
+    generating = false; btnSend.disabled = false;
+    input.placeholder = '输入你的回答，Enter 发送，Shift+Enter 换行';
+    input.focus();
+  }
+}
+
+btnSend.addEventListener('click', send);
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+});
+
+/* ==================== 多智能体调理方案 ==================== */
+// 三个专家（食疗 / 经络 / 运动）并行 + 主控汇总 + 安全审查，
+// 服务端逐节点推 step 事件——每个 Agent 产出多少条建议实时可见。
+const NODE_LABEL = {
+  router: '🔀 路由', collector: '📋 接诊信息', diagnoser: '🩺 辨证分析',
+  diet_expert: '🥣 食疗专家', meridian_expert: '🧭 经络专家',
+  movement_expert: '🚶 运动起居专家', planner: '📝 主控汇总',
+  safety: '🛡️ 安全审查', editor: '✍️ 主编整理', need_more: '❓ 补充信息',
+};
+
+async function runPlan() {
+  if (generating) { toast('正在生成中，请稍候'); return; }
+  generating = true; btnSend.disabled = true;
+  input.placeholder = '多智能体方案生成中…';
+  try {
+    const convId = await newConvIfNone();
+    const text = '请基于我的体质辨识结果与档案信息，生成一份系统调理方案';
+    $('#welcome')?.remove();
+    addUserMsg(text);
+    const shell = addAiShell();
+    const body = shell.querySelector('.body');
+    const statusText = shell.querySelector('.status-text');
+    const content = shell.querySelector('.content');
+    sources = [];
+    let answer = '', sawThink = false;
+
+    const resp = await fetch(`/api/plan/${convId}/chat`, {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: text})
+    });
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+
+    const reader = resp.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '';
+    while (true) {
+      const {done, value} = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, {stream: true});
+      let idx;
+      while ((idx = buf.indexOf('\n\n')) >= 0) {
+        const frame = buf.slice(0, idx); buf = buf.slice(idx + 2);
+        if (!frame.startsWith('data: ')) continue;
+        const ev = JSON.parse(frame.slice(6));
+
+        if (ev.type === 'step') {
+          const label = NODE_LABEL[ev.node] || ev.node;
+          statusText.textContent = `${label} 工作中…`;
+          traceLine(`<span class="t">⚙️</span><span>${esc(label)}</span>` +
+                    (ev.brief ? ` — ${esc(ev.brief)}` : ''));
+          sawThink = true;
+          scrollBottom();
+        } else if (ev.type === 'trace') {
+          traceLine(`<span class="t">🗺️</span><span>链路：${esc((ev.nodes || []).join(' → '))}</span>`);
+        } else if (ev.type === 'safety') {
+          const slot = shell.querySelector('.safety-slot');
+          if (slot) slot.innerHTML = safetyHtml(ev);
+          const askSlot = shell.querySelector('.ask-slot');
+          if (askSlot && ev.questions && ev.questions.length) {
+            askSlot.innerHTML = questionsHtml(ev.questions);
+          }
+          if ((ev.hits || []).length) sawThink = true;
+          scrollBottom();
+        } else if (ev.type === 'delta') {
+          answer += ev.text;
+          content.innerHTML = md(answer) + '<span class="cursor-blink"></span>';
+          scrollBottom();
+        } else if (ev.type === 'error') {
+          throw new Error(ev.text);
+        } else if (ev.type === 'done') {
+          statusText.parentElement.style.display = 'none';
+          content.innerHTML = md(answer || ev.answer) + sourcesHtml(sources);
+        }
+      }
+    }
+    finishThink(shell, sawThink);
+    attachCopy(shell, answer);
+    scrollBottom();
+    loadConvs();
+  } catch (e) {
+    toast('出错了：' + e.message, 4000);
+    chatInner.lastElementChild?.remove?.();
+  } finally {
+    generating = false; btnSend.disabled = false;
+    input.placeholder = '输入你的回答，Enter 发送，Shift+Enter 换行';
+    input.focus();
+  }
+}
+$('#link-plan').addEventListener('click', e => { e.preventDefault(); runPlan(); });
+function autoGrow() {
+  input.style.height = 'auto';
+  input.style.height = Math.min(input.scrollHeight, 160) + 'px';
+}
+input.addEventListener('input', autoGrow);
+
+/* ==================== 启动 ==================== */
+renderChatArea();
+loadConvs();
+</script>
+</body>
+</html>

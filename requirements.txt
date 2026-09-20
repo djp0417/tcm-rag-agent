@@ -1,0 +1,34 @@
+# ===== rag-agent-app 依赖清单（conda env: rag-agent）=====
+# 安装命令（国内镜像）：
+#   pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+#
+# 说明：langchain 1.4.x 会【自动带上】langgraph 与 langchain-core，
+#       无需手动安装这两个包（已在下文注释中标出）。
+
+# ---------- LLM / RAG 核心 ----------
+langchain==1.4.*            # v1 薄主包：create_agent / init_chat_model 等新入口
+langgraph==1.2.*            # 多 Agent 编排（app/multiagent）：StateGraph / 条件边 / checkpointer
+                            # 注意：langchain 会自动带上它，但**阶段 4 直接依赖它的 API**，
+                            # 所以显式列出——否则将来 langchain 松绑这个间接依赖时会静默炸掉
+#   └─ langchain-core==1.6.*# ← 自动安装：消息 / Runnable / VectorStore 基类
+langchain-deepseek==1.1.*   # ChatDeepSeek：DeepSeek 官方接入（读 DEEPSEEK_API_KEY）
+langchain-openai==1.6.*     # OpenAIEmbeddings：SiliconFlow bge-m3 走的就是这个包
+langchain-chroma==1.1.*     # Chroma 向量库持久化
+langchain-text-splitters    # RecursiveCharacterTextSplitter 中文切块
+chromadb                    # Chroma 底层存储（1.5.9，注意中文路径 bug）
+
+# ---------- 文档解析 ----------
+pypdf                       # PDF 文字层提取（古籍影印本走 OCR 兜底）
+fonttools                   # pypdf 解析 CFF Type1 字体编码的依赖；不装会刷
+                            # "fontTools is required to fully parse the encoding..."
+                            # 告警且部分字形解析不全（PDF 文本层可能缺字）
+pypdfium2                   # PDF 逐页渲染成图片（纯 pip 安装，无需 poppler）
+rapidocr_onnxruntime        # 中文 OCR（PP-OCR 模型转 ONNX，不需要装 paddlepaddle）
+
+# ---------- Web 服务 ----------
+fastapi                     # Web 后端
+uvicorn                     # ASGI 服务器（python -m app.server 内部调用）
+
+# ---------- 其他 ----------
+python-dotenv               # 读取项目根目录 .env
+gradio                     # （可选，已弃用）早期 Web 界面，保留仅为兼容旧入口

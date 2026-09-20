@@ -1,0 +1,38 @@
+# ===== 密钥与本地配置（绝不入库）=====
+.env
+.env.local
+*.key
+*.pem
+
+# ===== 语料与向量库（体积大 / 含版权与隐私，按 README 说明自行准备）=====
+data/*.pdf
+data/*.txt
+data/*.doc
+data/*.docx
+data/*.epub
+store/
+*.db
+*.db-journal
+
+# ===== 日志与缓存 =====
+*.log
+ocr_cache/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# ===== Python 环境 =====
+.venv/
+venv/
+
+# ===== 内部/求职类文档（保留本地，不入公开仓库）=====
+docs/面试八股/
+docs/reports/06-中医项目面试八股.html
+docs/reports/07-AI应用岗面试笔试考察全景.html
+docs/reports/08-项目全面介绍-面试讲述版.html
+
+# ===== IDE / 系统 =====
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

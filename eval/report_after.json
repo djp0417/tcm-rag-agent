@@ -1,0 +1,787 @@
+{
+  "tag": "after",
+  "time": "2026-09-14 12:17:39",
+  "retrieval": {
+    "baseline": {
+      "n": 34,
+      "recall@1": 0.8824,
+      "recall@4": 0.9412,
+      "kw_hit@4": 0.7647,
+      "mrr": 0.9118,
+      "kw_cover": 0.7598,
+      "avg_rounds": 1.0
+    },
+    "reflect": {
+      "n": 34,
+      "recall@1": 0.9118,
+      "recall@4": 0.9706,
+      "kw_hit@4": 0.8824,
+      "mrr": 0.9338,
+      "kw_cover": 0.8775,
+      "avg_rounds": 1.21
+    }
+  },
+  "retrieval_delta": {
+    "recall@1": 0.0294,
+    "recall@4": 0.0294,
+    "kw_hit@4": 0.1177,
+    "mrr": 0.022,
+    "kw_cover": 0.1177
+  },
+  "retrieval_rows": [
+    {
+      "id": "c01",
+      "category": "体质",
+      "question": "阳虚体质的人有哪些典型表现？",
+      "gold_sources": [
+        "01_中医体质养生基础.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.906,
+      "rounds": 1,
+      "final_query": "阳虚体质的人有哪些典型表现？",
+      "got_sources": [
+        "01_中医体质养生基础.md",
+        "01_中医体质养生基础.md",
+        "03_黄帝内经素问.md",
+        "03_黄帝内经素问.md"
+      ]
+    },
+    {
+      "id": "c02",
+      "category": "体质",
+      "question": "阴虚体质在饮食上应该注意什么？",
+      "gold_sources": [
+        "01_中医体质养生基础.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.716,
+      "rounds": 1,
+      "final_query": "阴虚体质在饮食上应该注意什么？",
+      "got_sources": [
+        "01_中医体质养生基础.md",
+        "01_中医体质养生基础.md",
+        "02_四季起居养生.md",
+        "《饮膳正要》.pdf"
+      ]
+    },
+    {
+      "id": "c03",
+      "category": "体质",
+      "question": "特禀体质的人养生要注意什么？",
+      "gold_sources": [
+        "01_中医体质养生基础.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.997,
+      "rounds": 1,
+      "final_query": "特禀体质的人养生要注意什么？",
+      "got_sources": [
+        "01_中医体质养生基础.md",
+        "01_中医体质养生基础.md",
+        "01_中医体质养生基础.md",
+        "01_中医体质养生基础.md"
+      ]
+    },
+    {
+      "id": "c04",
+      "category": "体质",
+      "question": "中医把人的体质分为哪几种？",
+      "gold_sources": [
+        "01_中医体质养生基础.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.997,
+      "rounds": 1,
+      "final_query": "中医把人的体质分为哪几种？",
+      "got_sources": [
+        "01_中医体质养生基础.md",
+        "01_中医体质养生基础.md",
+        "01_中医体质养生基础.md",
+        "《黄帝内经·灵枢》.pdf"
+      ]
+    },
+    {
+      "id": "c05",
+      "category": "体质",
+      "question": "痰湿体质和湿热体质分别有什么特点？",
+      "gold_sources": [
+        "01_中医体质养生基础.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.769,
+      "rounds": 1,
+      "final_query": "痰湿体质和湿热体质分别有什么特点？",
+      "got_sources": [
+        "01_中医体质养生基础.md",
+        "01_中医体质养生基础.md",
+        "01_中医体质养生基础.md",
+        "01_中医体质养生基础.md"
+      ]
+    },
+    {
+      "id": "s01",
+      "category": "四季起居",
+      "question": "春天养生在起居上应该注意什么？",
+      "gold_sources": [
+        "02_四季起居养生.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.964,
+      "rounds": 1,
+      "final_query": "春天养生在起居上应该注意什么？",
+      "got_sources": [
+        "02_四季起居养生.md",
+        "02_四季起居养生.md",
+        "02_四季起居养生.md",
+        "01_中医体质养生基础.md"
+      ]
+    },
+    {
+      "id": "s02",
+      "category": "四季起居",
+      "question": "长夏（夏秋之交）应该怎样调养？",
+      "gold_sources": [
+        "02_四季起居养生.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.964,
+      "rounds": 1,
+      "final_query": "长夏（夏秋之交）应该怎样调养？",
+      "got_sources": [
+        "02_四季起居养生.md",
+        "02_四季起居养生.md",
+        "03_黄帝内经素问.md",
+        "03_黄帝内经素问.md"
+      ]
+    },
+    {
+      "id": "s03",
+      "category": "四季起居",
+      "question": "秋季养生的重点是什么？",
+      "gold_sources": [
+        "02_四季起居养生.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.955,
+      "rounds": 1,
+      "final_query": "秋季养生的重点是什么？",
+      "got_sources": [
+        "02_四季起居养生.md",
+        "02_四季起居养生.md",
+        "《饮膳正要》.pdf",
+        "《饮膳正要》.pdf"
+      ]
+    },
+    {
+      "id": "s04",
+      "category": "四季起居",
+      "question": "“春夏养阳，秋冬养阴”这句话是什么意思？",
+      "gold_sources": [
+        "02_四季起居养生.md",
+        "03_黄帝内经素问.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.988,
+      "rounds": 1,
+      "final_query": "“春夏养阳，秋冬养阴”这句话是什么意思？",
+      "got_sources": [
+        "02_四季起居养生.md",
+        "03_黄帝内经素问.md",
+        "《难经》.pdf",
+        "03_黄帝内经素问.md"
+      ]
+    },
+    {
+      "id": "s05",
+      "category": "四季起居",
+      "question": "冬季起居调养有什么讲究？",
+      "gold_sources": [
+        "02_四季起居养生.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.774,
+      "rounds": 1,
+      "final_query": "冬季起居调养有什么讲究？",
+      "got_sources": [
+        "02_四季起居养生.md",
+        "02_四季起居养生.md",
+        "《饮膳正要》.pdf",
+        "《黄帝内经·灵枢》.pdf"
+      ]
+    },
+    {
+      "id": "n01",
+      "category": "内经·素问",
+      "question": "《黄帝内经》说上古之人能“尽终其天年，度百岁乃去”，靠的是什么？",
+      "gold_sources": [
+        "03_黄帝内经素问.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.986,
+      "rounds": 1,
+      "final_query": "《黄帝内经》说上古之人能“尽终其天年，度百岁乃去”，靠的是什么？",
+      "got_sources": [
+        "03_黄帝内经素问.md",
+        "03_黄帝内经素问.md",
+        "03_黄帝内经素问.md",
+        "《黄帝内经·灵枢》.pdf"
+      ]
+    },
+    {
+      "id": "n02",
+      "category": "内经·素问",
+      "question": "“正气存内，邪不可干”这句话在《素问》里是什么意思？",
+      "gold_sources": [
+        "03_黄帝内经素问.md"
+      ],
+      "hit1": false,
+      "hit4": true,
+      "mrr": 0.5,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.998,
+      "rounds": 2,
+      "final_query": "【自反思救回】正气存内 邪不可干 素问 黄帝内经 正气 邪气 发病",
+      "got_sources": [
+        "《黄帝内经·灵枢》.pdf",
+        "03_黄帝内经素问.md",
+        "《黄帝内经·灵枢》.pdf",
+        "《黄帝内经·灵枢》.pdf"
+      ]
+    },
+    {
+      "id": "n03",
+      "category": "内经·素问",
+      "question": "《素问》中“五谷为养”的完整说法是什么？",
+      "gold_sources": [
+        "03_黄帝内经素问.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.975,
+      "rounds": 2,
+      "final_query": "【自反思救回】五谷为养 素问 五谷为充 五果为助 五畜为益 五菜为充 食养",
+      "got_sources": [
+        "03_黄帝内经素问.md",
+        "03_黄帝内经素问.md",
+        "03_黄帝内经素问.md",
+        "《饮膳正要》.pdf"
+      ]
+    },
+    {
+      "id": "n04",
+      "category": "内经·素问",
+      "question": "《素问》认为女子一生的生理变化以几年为一个阶段？",
+      "gold_sources": [
+        "03_黄帝内经素问.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.981,
+      "rounds": 2,
+      "final_query": "【自反思救回】素问 女子 生理 阶段 七年 肾气 天癸 冲任",
+      "got_sources": [
+        "03_黄帝内经素问.md",
+        "03_黄帝内经素问.md",
+        "03_黄帝内经素问.md",
+        "03_黄帝内经素问.md"
+      ]
+    },
+    {
+      "id": "n05",
+      "category": "内经·素问",
+      "question": "“恬惔虚无，真气从之”应该怎么理解？",
+      "gold_sources": [
+        "03_黄帝内经素问.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.808,
+      "rounds": 1,
+      "final_query": "“恬惔虚无，真气从之”应该怎么理解？",
+      "got_sources": [
+        "03_黄帝内经素问.md",
+        "03_黄帝内经素问.md",
+        "《黄帝内经·灵枢》.pdf",
+        "03_黄帝内经素问.md"
+      ]
+    },
+    {
+      "id": "n06",
+      "category": "内经·素问",
+      "question": "《素问》里四时与五脏是怎么对应的？",
+      "gold_sources": [
+        "03_黄帝内经素问.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 0.0,
+      "kw_hit4": false,
+      "top1_score": 0.765,
+      "rounds": 1,
+      "final_query": "《素问》里四时与五脏是怎么对应的？",
+      "got_sources": [
+        "03_黄帝内经素问.md",
+        "03_黄帝内经素问.md",
+        "《黄帝内经·灵枢》.pdf",
+        "《难经》.pdf"
+      ]
+    },
+    {
+      "id": "n07",
+      "category": "内经·素问",
+      "question": "《素问》为什么说“阴平阳秘，精神乃治”？",
+      "gold_sources": [
+        "03_黄帝内经素问.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.915,
+      "rounds": 1,
+      "final_query": "《素问》为什么说“阴平阳秘，精神乃治”？",
+      "got_sources": [
+        "03_黄帝内经素问.md",
+        "《黄帝内经·灵枢》.pdf",
+        "《黄帝内经·灵枢》.pdf",
+        "《黄帝内经·灵枢》.pdf"
+      ]
+    },
+    {
+      "id": "l01",
+      "category": "内经·灵枢",
+      "question": "《灵枢》里说的“九针”是什么？",
+      "gold_sources": [
+        "《黄帝内经·灵枢》.pdf"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.969,
+      "rounds": 1,
+      "final_query": "《灵枢》里说的“九针”是什么？",
+      "got_sources": [
+        "《黄帝内经·灵枢》.pdf",
+        "《黄帝内经·灵枢》.pdf",
+        "《黄帝内经·灵枢》.pdf",
+        "《黄帝内经·灵枢》.pdf"
+      ]
+    },
+    {
+      "id": "l02",
+      "category": "内经·灵枢",
+      "question": "《灵枢》认为经脉的作用是什么？",
+      "gold_sources": [
+        "《黄帝内经·灵枢》.pdf"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 0.0,
+      "kw_hit4": false,
+      "top1_score": 0.939,
+      "rounds": 1,
+      "final_query": "《灵枢》认为经脉的作用是什么？",
+      "got_sources": [
+        "《黄帝内经·灵枢》.pdf",
+        "《黄帝内经·灵枢》.pdf",
+        "《难经》.pdf",
+        "《黄帝内经·灵枢》.pdf"
+      ]
+    },
+    {
+      "id": "l03",
+      "category": "内经·灵枢",
+      "question": "《灵枢》里的“神”指的是什么？",
+      "gold_sources": [
+        "《黄帝内经·灵枢》.pdf"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.573,
+      "rounds": 1,
+      "final_query": "《灵枢》里的“神”指的是什么？",
+      "got_sources": [
+        "《黄帝内经·灵枢》.pdf",
+        "《黄帝内经·灵枢》.pdf",
+        "03_黄帝内经素问.md",
+        "《黄帝内经·灵枢》.pdf"
+      ]
+    },
+    {
+      "id": "j01",
+      "category": "难经",
+      "question": "《难经》主要论述了哪些内容？",
+      "gold_sources": [
+        "《难经》.pdf"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.994,
+      "rounds": 1,
+      "final_query": "《难经》主要论述了哪些内容？",
+      "got_sources": [
+        "《难经》.pdf",
+        "《难经》.pdf",
+        "《难经》.pdf",
+        "《难经》.pdf"
+      ]
+    },
+    {
+      "id": "j02",
+      "category": "难经",
+      "question": "《难经》里对奇经八脉是怎么论述的？",
+      "gold_sources": [
+        "《难经》.pdf"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.983,
+      "rounds": 1,
+      "final_query": "《难经》里对奇经八脉是怎么论述的？",
+      "got_sources": [
+        "《难经》.pdf",
+        "《难经》.pdf",
+        "《难经》.pdf",
+        "《难经》.pdf"
+      ]
+    },
+    {
+      "id": "h01",
+      "category": "本草·食养",
+      "question": "《神农本草经》把药物分成哪几类？上品是什么意思？",
+      "gold_sources": [
+        "《神农本草经》.pdf"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 0.3333333333333333,
+      "kw_hit4": false,
+      "top1_score": 0.933,
+      "rounds": 1,
+      "final_query": "《神农本草经》把药物分成哪几类？上品是什么意思？",
+      "got_sources": [
+        "《神农本草经》.pdf",
+        "《神农本草经》.pdf",
+        "《神农本草经》.pdf",
+        "《神农本草经》.pdf"
+      ]
+    },
+    {
+      "id": "h02",
+      "category": "本草·食养",
+      "question": "《神农本草经》里记载的石韦有什么功效？",
+      "gold_sources": [
+        "《神农本草经》.pdf"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.922,
+      "rounds": 1,
+      "final_query": "《神农本草经》里记载的石韦有什么功效？",
+      "got_sources": [
+        "《神农本草经》.pdf",
+        "《神农本草经》.pdf",
+        "《神农本草经》.pdf",
+        "《神农本草经》.pdf"
+      ]
+    },
+    {
+      "id": "h03",
+      "category": "本草·食养",
+      "question": "《食疗本草》里记载了盐有哪些用法？",
+      "gold_sources": [
+        "《食疗本草》.pdf"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.911,
+      "rounds": 1,
+      "final_query": "《食疗本草》里记载了盐有哪些用法？",
+      "got_sources": [
+        "《食疗本草》.pdf",
+        "《神农本草经》.pdf",
+        "《食疗本草》.pdf",
+        "《食疗本草》.pdf"
+      ]
+    },
+    {
+      "id": "h04",
+      "category": "本草·食养",
+      "question": "《饮膳正要》是一部什么样的书？",
+      "gold_sources": [
+        "《饮膳正要》.pdf"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.924,
+      "rounds": 1,
+      "final_query": "《饮膳正要》是一部什么样的书？",
+      "got_sources": [
+        "《饮膳正要》.pdf",
+        "《饮膳正要》.pdf",
+        "《饮膳正要》.pdf",
+        "《饮膳正要》.pdf"
+      ]
+    },
+    {
+      "id": "h05",
+      "category": "本草·食养",
+      "question": "《食疗本草》里记载的“黄精”怎么服用？",
+      "gold_sources": [
+        "《食疗本草》.pdf"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.887,
+      "rounds": 1,
+      "final_query": "《食疗本草》里记载的“黄精”怎么服用？",
+      "got_sources": [
+        "《食疗本草》.pdf",
+        "《饮膳正要》.pdf",
+        "抱朴子.txt",
+        "《食疗本草》.pdf"
+      ]
+    },
+    {
+      "id": "h06",
+      "category": "本草·食养",
+      "question": "《饮膳正要》里记载的食疗方“羊蜜膏”是做什么用的？",
+      "gold_sources": [
+        "《饮膳正要》.pdf"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.957,
+      "rounds": 1,
+      "final_query": "《饮膳正要》里记载的食疗方“羊蜜膏”是做什么用的？",
+      "got_sources": [
+        "《饮膳正要》.pdf",
+        "《饮膳正要》.pdf",
+        "《饮膳正要》.pdf",
+        "《饮膳正要》.pdf"
+      ]
+    },
+    {
+      "id": "b01",
+      "category": "抱朴子",
+      "question": "《抱朴子》里葛洪提出了哪些养生方法？",
+      "gold_sources": [
+        "抱朴子.txt"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 0.5,
+      "kw_hit4": true,
+      "top1_score": 0.916,
+      "rounds": 1,
+      "final_query": "《抱朴子》里葛洪提出了哪些养生方法？",
+      "got_sources": [
+        "抱朴子.txt",
+        "抱朴子.txt",
+        "抱朴子.txt",
+        "抱朴子.txt"
+      ]
+    },
+    {
+      "id": "b02",
+      "category": "抱朴子",
+      "question": "葛洪认为怎样才能延年益寿？",
+      "gold_sources": [
+        "抱朴子.txt"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 0.0,
+      "kw_hit4": false,
+      "top1_score": 0.781,
+      "rounds": 1,
+      "final_query": "葛洪认为怎样才能延年益寿？",
+      "got_sources": [
+        "抱朴子.txt",
+        "抱朴子.txt",
+        "抱朴子.txt",
+        "抱朴子.txt"
+      ]
+    },
+    {
+      "id": "k01",
+      "category": "口语化追问",
+      "question": "最近老是不想吃饭是为什么？",
+      "gold_sources": [
+        "02_四季起居养生.md",
+        "03_黄帝内经素问.md",
+        "01_中医体质养生基础.md"
+      ],
+      "hit1": false,
+      "hit4": true,
+      "mrr": 0.25,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.208,
+      "rounds": 2,
+      "final_query": "纳呆 食欲不振 脾胃虚弱 不思饮食 食少",
+      "got_sources": [
+        "抱朴子.txt",
+        "《黄帝内经·灵枢》.pdf",
+        "《饮膳正要》.pdf",
+        "03_黄帝内经素问.md"
+      ]
+    },
+    {
+      "id": "k02",
+      "category": "口语化追问",
+      "question": "晚上老是睡不着觉，有什么调理办法？",
+      "gold_sources": [
+        "02_四季起居养生.md",
+        "03_黄帝内经素问.md"
+      ],
+      "hit1": false,
+      "hit4": false,
+      "mrr": 0.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.478,
+      "rounds": 2,
+      "final_query": "失眠 不寐 目不安 心脾两虚 阴虚火旺 安神 调理",
+      "got_sources": [
+        "《难经》.pdf",
+        "《食疗本草》.pdf",
+        "《饮膳正要》.pdf",
+        "01_中医体质养生基础.md"
+      ]
+    },
+    {
+      "id": "k03",
+      "category": "口语化追问",
+      "question": "我手脚一年到头都是凉的，该吃点什么？",
+      "gold_sources": [
+        "01_中医体质养生基础.md",
+        "02_四季起居养生.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.744,
+      "rounds": 2,
+      "final_query": "【自反思救回】手足厥冷 四肢不温 阳虚 脾肾阳虚 温补",
+      "got_sources": [
+        "01_中医体质养生基础.md",
+        "03_黄帝内经素问.md",
+        "《饮膳正要》.pdf",
+        "《黄帝内经·灵枢》.pdf"
+      ]
+    },
+    {
+      "id": "k04",
+      "category": "口语化追问",
+      "question": "一到换季就容易感冒，平时该怎么调理？",
+      "gold_sources": [
+        "01_中医体质养生基础.md",
+        "03_黄帝内经素问.md"
+      ],
+      "hit1": true,
+      "hit4": true,
+      "mrr": 1.0,
+      "kw_cover": 1.0,
+      "kw_hit4": true,
+      "top1_score": 0.372,
+      "rounds": 2,
+      "final_query": "一到换季就容易感冒，平时该怎么调理？",
+      "got_sources": [
+        "01_中医体质养生基础.md",
+        "02_四季起居养生.md",
+        "02_四季起居养生.md",
+        "03_黄帝内经素问.md"
+      ]
+    }
+  ]
+}
