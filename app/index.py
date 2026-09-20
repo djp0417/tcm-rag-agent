@@ -119,6 +119,12 @@ DATA_DIR = BASE_DIR / "data"
 COLLECTION = "tcm_health"
 MANIFEST_PATH = BASE_DIR / "store" / "ingest_manifest.json"
 
+# data/ 下这些文件是**说明文档**而不是语料：它们描述语料来源与获取途径，
+# 被当成语料切块会污染检索（问"语料从哪来"反而可能召回自己的说明文）。
+# 单独列出来而不是换成别的扩展名——GitHub 打开 data/ 目录时会自动渲染 README.md，
+# 目录"自带说明书"是想要的效果。
+NON_CORPUS_NAMES = frozenset({"README.md"})
+
 CHUNK_SIZE = 500                 # 中文单块目标长度（字符）
 CHUNK_OVERLAP = 80               # 相邻块重叠，避免关键句被拦腰截断
 
@@ -280,11 +286,14 @@ def adopt_existing_library(client, lib_mtime: float,
     # 不能用「未被认领」来判孤儿：mtime 晚于建库时间的文件只是「待重新处理」，
     # 它还在 data/ 下，删掉就是丢数据。
     present = {f.name for f in DATA_DIR.iterdir()
-               if f.is_file() and f.suffix.lower() in (".md", ".txt", ".pdf")}
+               if f.is_file() and f.suffix.lower() in (".md", ".txt", ".pdf")
+               and f.name not in NON_CORPUS_NAMES}
 
     records: dict = {}
     for f in DATA_DIR.iterdir():
         if not f.is_file() or f.suffix.lower() not in (".md", ".txt", ".pdf"):
+            continue
+        if f.name in NON_CORPUS_NAMES:
             continue
         lens = by_src.get(f.name)
         if not lens:
@@ -487,6 +496,7 @@ def load_all(allow_ocr: bool = True, manifest: dict | None = None,
         + sorted(DATA_DIR.glob("*.txt"))
         + sorted(DATA_DIR.glob("*.pdf"))
     )
+    files = [f for f in files if f.name not in NON_CORPUS_NAMES]
 
     for f in files:
         name = f.name
