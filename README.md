@@ -33,7 +33,6 @@
 - [扩充知识库](#扩充知识库)
 - [常见问题](#常见问题)
 - [路线图](#路线图)
-- [延伸文档](#延伸文档)
 
 ---
 
@@ -266,7 +265,6 @@ python -m app.eval --full         # 四项全跑，出 JSON + Markdown 报告
 
 历史基线（4345 块库）：自反思检索把 **金标块召回从 81.1% 提升到 89.2%（+8.1pt）**、
 关键词覆盖 +8.1pt、MRR 0.887 → 0.914，域外拒答 100%。
-指标定义、实测明细与"评估驱动的修复闭环"见 [评估体系](docs/评估体系.md)。
 
 ## MCP Server 接入
 
@@ -334,8 +332,7 @@ rag-agent-app/
 ├─ tools/                  # 回归脚本（不在主链路里，专门用来"证明它真的对"）
 ├─ web/                    # 问答页与问诊页（原生 HTML/JS 单文件，无构建依赖）
 ├─ data/                   # 知识库原文（见 data/README.md）
-├─ store/                  # chroma 向量库 + chat.db + OCR 缓存（均不入库）
-└─ docs/                   # 设计文档、开发纪实、踩坑实录、评估体系
+└─ store/                  # chroma 向量库 + chat.db + OCR 缓存（均不入库）
 ```
 
 ## 扩充知识库
@@ -356,8 +353,8 @@ rag-agent-app/
 3. **入库后跑一次 `python -m app.eval --validate`**，确认零残留。
 
 ⚠️ **语料版权**：仓库**不包含**原书 PDF（多为现代出版物与国家标准，公开再分发有版权风险）。
-`data/` 里只保留 6 篇自建知识卡片作为示例，其余请自行获取——清单与获取途径见
-[语料扩充书单](docs/语料扩充书单.md)，说明见 [data/README.md](data/README.md)。
+`data/` 里只保留 6 篇自建知识卡片作为示例，其余请自行获取——语料类别与建库方式见
+[data/README.md](data/README.md)。
 
 ## 常见问题
 
@@ -366,10 +363,10 @@ rag-agent-app/
 | `ModuleNotFoundError: langchain` | 没激活环境，或没用 `python -m` 模块方式运行 |
 | 401 / invalid api key | `.env` 没建或 Key 填错；先跑 `python check_env.py` |
 | `Error loading hnsw index` | 违反 chromadb 铁律：打开库必须走 `app.paths.chroma_store_path()`（相对路径），且建库期不能混入网络请求 |
-| 召回内容答非所问 | 确认 `app/embed.py` 有 `check_embedding_ctx_length=False`（见 [踩坑实录](docs/踩坑实录.md)），然后重建库 |
+| 召回内容答非所问 | 确认 `app/embed.py` 有 `check_embedding_ctx_length=False`（第三方 embedding 端点对超长文本会静默返回垃圾向量），然后重建库 |
 | 语料里明明有这个词却搜不到 | 大概率是 PDF 部首码位污染；跑 `--validate` 看残留，重建库即可 |
 | `python -m app.index` 每次都全量重跑 | 检查 `store/ingest_manifest.json` 是否被删；对不上就 `--rebuild` 一次，之后即增量 |
-| 页面一直转圈但日志刷 200 OK | SSE 锁被客户端断开焊死；查 `store/chat.db` 有无 assistant 消息，详见 [踩坑实录](docs/踩坑实录.md) |
+| 页面一直转圈但日志刷 200 OK | SSE 锁被客户端断开焊死（**锁绝不能跨 `yield` 持有**）；查 `store/chat.db` 有无 assistant 消息 |
 | 端口 10048（7860 被占） | 多半是上次服务没退干净；`python -m app.server --port 7861`，启动预检会提示怎么查 PID |
 
 ## 路线图
@@ -382,18 +379,6 @@ rag-agent-app/
 - [x] 阶段 5：安全层（独立于 RAG 的硬规则判读 + 五档分级 + 交付前程序化校验）
 - [x] 阶段 6：MCP Server（4 工具 + 3 资源，stdio / HTTP 双模式）
 - [ ] 阶段 7：知识库持续扩充（第二批权威语料入库、gold 重标注、链路级评估补全）
-
-## 延伸文档
-
-| 文档 | 内容 |
-| --- | --- |
-| [开发纪实](docs/开发纪实.md) | 各阶段的实现细节与迭代过程：每一步为什么这么做、怎么验证的 |
-| [踩坑实录](docs/踩坑实录.md) | 五个**静默故障**的定位与修复：被吞掉的异常、PDF 码位污染、SSE 锁死、chromadb/Windows 铁律、第三方 embedding 端点差异 |
-| [评估体系](docs/评估体系.md) | 指标定义、实测结果与"测 → 改 → 复测"的修复闭环 |
-| [多 Agent 设计方案](docs/阶段4-多Agent设计方案.html) | 就绪度评估、角色定义、共享状态 schema、图结构与落地步骤 |
-| [MCP 封装与接入方案](docs/reports/05-MCP封装与接入实施方案.html) | 四工具契约设计、部署方式与实测踩坑 |
-| [语料扩充书单](docs/语料扩充书单.md) | 第二批语料清单（含获取途径与版权分层建议） |
-| [首跑样例](docs/samples/阶段4-首跑样例-阳虚失眠.md) | 真实链路跑批记录（阳虚质失眠） |
 
 ## 许可
 
